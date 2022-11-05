@@ -1,6 +1,6 @@
 pragma solidity ^0.8.13;
 
-import {ERC20, ERC20Permit} from "openzeppelin/token/ERC20/extensions/draft-ERC20Permit.sol";
+import { ERC20, ERC20Permit } from "openzeppelin/token/ERC20/extensions/draft-ERC20Permit.sol";
 
 contract Snap is ERC20Permit {
     address public owner;
