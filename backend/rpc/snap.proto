@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package snap;
+
+service Snap {
+  rpc CreateChain (CreateChainRequest) returns (CreateChainReply) {}
+  // TODO: add more RPC calls
+}
+
+message CreateChainRequest {
+  // TODO: add signature signed by depositor
+  string depositor = 1;
+  int32 nonce = 2;
+  string name = 3;
+  string currency= 4;
+  // TODO: add extra_data for customized genesis file
+}
+
+message CreateChainReply {
+  int32 chain_id = 1;
+}
