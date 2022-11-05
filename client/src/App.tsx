@@ -36,7 +36,7 @@ const SContainer = styled.div`
   min-height: 200px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
   word-break: break-word;
 `;
@@ -64,6 +64,7 @@ const SSubHeader = styled.div`
   justify-content: space-between;
   padding: 0 16px;
 `;
+
 let web3Modal: Web3Modal;
 const App = () => {
   const [provider, setProvider] = useState<any>();
@@ -182,7 +183,7 @@ const App = () => {
 
   return (
     <SLayout>
-      <Column maxWidth={1000} spanHeight>
+      <Column maxWidth={1400} spanHeight>
         <Header
           connected={connected}
           address={address}
