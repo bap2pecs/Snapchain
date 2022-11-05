@@ -8,7 +8,6 @@ export async function initGenesisBlock(file, datadir) {
     'ethereum/client-go:alltools-latest ' +
     `geth init --datadir ${datadir} ${file}`;
 
-  const execAsync = util.promisify(exec);
   const { stdout, stderr } = await execAsync(cmd);
   console.log('stdout:', stdout);
   console.error('stderr:', stderr);
