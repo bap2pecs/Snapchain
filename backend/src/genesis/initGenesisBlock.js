@@ -1,5 +1,4 @@
-import util from 'util';
-import { exec } from 'child_process';
+import { execAsync } from '../utils/execAsync.js';
 
 export async function initGenesisBlock(file, datadir) {
   // TODO:
