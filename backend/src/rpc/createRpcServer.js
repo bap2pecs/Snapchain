@@ -9,6 +9,8 @@ import { createGenesisFile } from '../genesis/createGenesisFile.js';
 import { initGenesisBlock } from '../genesis/initGenesisBlock.js';
 import { randomIntFromInterval } from '../random/randomNum.js';
 import { createNodeKeyFile } from '../geth/createNodeKeyFile.js';
+import { createComposeFile } from '../geth/createComposeFile.js';
+import { copyKeystore } from '../geth/copyKeystore.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PROTO_PATH = __dirname + '/snap.proto';
@@ -45,8 +47,8 @@ function createChainFactory(node) {
     await createGenesisFile(
       genesisFile,
       chainId,
-      '25bd2c1f21c4603355b9456dd97d9d2c098a1d46',
-      '40640236ca267cea54e0e545ca2363032a05fc08',
+      process.env.SEALER_ADDRESS_1,
+      process.env.SEALER_ADDRESS_2,
       call.request.depositor
     );
     // 4. init the genesis block
@@ -54,6 +56,21 @@ function createChainFactory(node) {
 
     // 5. generate the node key file
     const nodeKeyFile = await createNodeKeyFile(datadir);
+
+    // 6. copy the keystore dir from ~/.ethereum/snapchain/keystore
+    // to <datadir>/keystore
+    // TODO: not sure if it makes sense to copy it instead of creating a new
+    // account for each chain. need some discussion
+    await copyKeystore(datadir + '/keystore');
+
+    // 7. create the compose file
+
+    const composeFile = await createComposeFile(
+      datadir,
+      nodeKeyFile,
+      port,
+      chainId
+    );
 
     // 6. start the geth instance
     // - create the docker file
