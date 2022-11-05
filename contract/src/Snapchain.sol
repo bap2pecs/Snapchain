@@ -23,6 +23,9 @@ contract Snapchain {
 
     event ChainCreated(address indexed user, uint256 indexed depositValue, uint256 ttl, uint256 timeDeposited, uint256 indexed chainIndex);
     event ChainDestroyed(address indexed user, uint256 indexed index);
+    event RewardsDistributed(uint256 indexed rewardAmount);
+    event OwnerChanged(address indexed newOwner);
+    event SecondPriceChanged(uint256 indexed newSecondPrice);
 
     constructor(
         Snap _snap, 
@@ -75,14 +78,20 @@ contract Snapchain {
 
     function distributeReward() public onlyOwner {
         snap.transferFrom(address(this), owner, snap.balanceOf(address(this)));
+
+        emit RewardsDistributed(snap.balanceOf(address(this)));
     } 
 
     function changeOwner(address _newOwner) public onlyOwner {
         require(_newOwner != address(0), "Not valid address");
         owner = _newOwner;
+
+        emit OwnerChanged(_newOwner);
     }
 
     function setSecondPrice(uint256 _secondPrice) public onlyOwner {
         secondPrice = _secondPrice;
+
+        emit SecondPriceChanged(_secondPrice);
     }
 }
