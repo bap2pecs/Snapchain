@@ -16,6 +16,7 @@
     "bignumber.js": "^8.1.1",
     "bitski": "^0.10.9",
     "blockies-ts": "^1.0.0",
+    "dotenv": "^10.0.0",
     "ethereumjs-util": "^6.1.0",
     "ethers": "^5.0.24",
     "fortmatic": "^0.8.2",
@@ -43,7 +44,7 @@
     "@types/react-dom": "^16.9.8",
     "@types/styled-components": "4.1.8",
     "@types/web3": "^1.2.2",
-    "typescript": "3.2.2"
+    "typescript": "^3.2.2"
   },
   "browserslist": [
     ">0.2%",
