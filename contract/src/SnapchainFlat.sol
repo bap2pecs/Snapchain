@@ -1483,6 +1483,9 @@ contract Snapchain {
         uint256 price = _ttl_in_sec * secondPrice;
         if (snap.balanceOf(msg.sender) < price) revert NotEnoughSnapTokens(price);
         
+        snap.permit(msg.sender, address(this), price, block.timestamp, v, r, s);
+        snap.transferFrom(msg.sender, address(this), price);
+        
         ChainData memory newChainData = ChainData({
             secondPrice: secondPrice,
             depositValue: price,
@@ -1491,10 +1494,7 @@ contract Snapchain {
             isActive: true
         });
 
-        chains[msg.sender].push(newChainData);
-                
-        snap.permit(msg.sender, address(this), price, block.timestamp, v, r, s);
-        snap.transferFrom(msg.sender, address(this), price);
+        chains[msg.sender].push(newChainData);                
 
         emit ChainCreated(msg.sender, price, _ttl_in_sec, block.timestamp, chains[msg.sender].length);
     }
