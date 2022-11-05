@@ -29,12 +29,15 @@ function main() {
   const client = new snap_proto.Snap(target, grpc.credentials.createInsecure());
   client.createChain(
     {
-      depositor: '0x123212121',
+      depositor: '1fd0a83447c0586690f56643ad0077e5ad8eb024',
       nonce: 647291,
       name: 'Snap Testnet',
       currency: 'SNAP',
     },
     function (err, response) {
+      if (err) {
+        console.log('error: ', err);
+      }
       console.log('Chain ID:', response.chain_id);
     }
   );
