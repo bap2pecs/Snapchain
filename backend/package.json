@@ -7,6 +7,11 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "scripts": {
+    "server1": "node -r dotenv/config src/scripts/server1.js '/ip4/127.0.0.1/tcp/8000/ws' '0.0.0.0:50051'",
+    "server2": "node -r dotenv/config src/scripts/server2.js '/ip4/127.0.0.1/tcp/8001/ws'",
+    "client1": "node -r dotenv/config src/scripts/client1.js"
+  },
   "dependencies": {
     "@chainsafe/libp2p-noise": "^10.0.1",
     "@grpc/grpc-js": "^1.7.3",
@@ -14,6 +19,7 @@
     "@libp2p/bootstrap": "^5.0.0",
     "@libp2p/mplex": "^7.0.0",
     "@libp2p/websockets": "^5.0.0",
+    "dotenv": "^16.0.3",
     "fs-extra": "^10.1.0",
     "it-pipe": "^2.0.4",
     "libp2p": "^0.40.0",
