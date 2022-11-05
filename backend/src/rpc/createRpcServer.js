@@ -2,7 +2,7 @@ import { pipe } from 'it-pipe';
 import { fromString as uint8ArrayFromString } from 'uint8arrays/from-string';
 import grpc from '@grpc/grpc-js';
 import protoLoader from '@grpc/proto-loader';
-import { __dirname } from '../utils/dirName.js';
+import { dirName } from '../utils/dirName.js';
 import { genChainId } from '../chainId/genChainId.js';
 import { createGenesisFile } from '../genesis/createGenesisFile.js';
 import { initGenesisBlock } from '../genesis/initGenesisBlock.js';
@@ -11,7 +11,7 @@ import { createNodeKeyFile } from '../geth/createNodeKeyFile.js';
 import { createComposeFile } from '../geth/createComposeFile.js';
 import { copyKeystore } from '../geth/copyKeystore.js';
 
-const PROTO_PATH = __dirname + '/snap.proto';
+const PROTO_PATH = dirName(import.meta.url) + '/snap.proto';
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
