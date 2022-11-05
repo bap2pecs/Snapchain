@@ -1,9 +1,9 @@
-import * as React from 'react'
-import styled from 'styled-components'
-import * as PropTypes from 'prop-types'
-import Blockie from './Blockie'
-import { ellipseAddress, getChainData } from '../helpers/utilities';
-import { transitions } from '../styles'
+import * as React from "react";
+import styled from "styled-components";
+import * as PropTypes from "prop-types";
+import Blockie from "./Blockie";
+import { ellipseAddress } from "../helpers/utilities";
+import { transitions } from "../styles";
 
 const SHeader = styled.div`
   margin-top: -1px;
@@ -14,47 +14,46 @@ const SHeader = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-`
+  background-image: url(src/assets/Snapchain_Background.png);
+`;
 
 const SActiveAccount = styled.div`
   display: flex;
   align-items: center;
   position: relative;
   font-weight: 500;
-`
-
-const SActiveChain = styled(SActiveAccount)`
-  flex-direction: column;
-  text-align: left;
-  align-items: flex-start;
-  & p {
-    font-size: 0.8em;
-    margin: 0;
-    padding: 0;
-  }
-  & p:nth-child(2) {
-    font-weight: bold;
-  }
-`
+`;
 
 const SBlockie = styled(Blockie)`
   margin-right: 10px;
-`
+`;
+
+const SSnapChainTitle = styled.h1`
+  font-family: "Baunk";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 40px;
+  text-transform: uppercase;
+  color: #fefefe;
+`;
 
 interface IHeaderStyle {
-  connected: boolean
+  connected: boolean;
 }
 
 const SAddress = styled.p<IHeaderStyle>`
   transition: ${transitions.base};
   font-weight: bold;
-  margin: ${({ connected }) => (connected ? '-2px auto 0.7em' : '0')};
-`
+  color: white;
+  margin: ${({ connected }) => (connected ? "-2px auto 0.7em" : "0")};
+`;
 
 const SDisconnect = styled.div<IHeaderStyle>`
   transition: ${transitions.button};
   font-size: 12px;
   font-family: monospace;
+  color: white;
   position: absolute;
   right: 0;
   top: 20px;
@@ -62,49 +61,43 @@ const SDisconnect = styled.div<IHeaderStyle>`
   cursor: pointer;
 
   opacity: ${({ connected }) => (connected ? 1 : 0)};
-  visibility: ${({ connected }) => (connected ? 'visible' : 'hidden')};
-  pointer-events: ${({ connected }) => (connected ? 'auto' : 'none')};
+  visibility: ${({ connected }) => (connected ? "visible" : "hidden")};
+  pointer-events: ${({ connected }) => (connected ? "auto" : "none")};
 
   &:hover {
     transform: translateY(-1px);
     opacity: 0.5;
   }
-`
+`;
 
 interface IHeaderProps {
-  killSession: () => void
-  connected: boolean
-  address: string
-  chainId: number
+  killSession: () => void;
+  connected: boolean;
+  address: string;
+  chainId: number;
 }
 
 const Header = (props: IHeaderProps) => {
-  const { connected, address, chainId, killSession } = props
-  const chainData = chainId ? getChainData(chainId) : null
+  const { connected, address, chainId, killSession } = props;
   return (
     <SHeader {...props}>
-      {connected && chainData ? (
-        <SActiveChain>
-          <p>{`Connected to`}</p>
-          <p>{chainData.name}</p>
-        </SActiveChain>
-      ) : 'Not Connected'}
+      <SSnapChainTitle>SnapChain</SSnapChainTitle>
       {address && (
         <SActiveAccount>
           <SBlockie address={address} />
           <SAddress connected={connected}>{ellipseAddress(address)}</SAddress>
           <SDisconnect connected={connected} onClick={killSession}>
-            {'Disconnect'}
+            {"Disconnect"}
           </SDisconnect>
         </SActiveAccount>
       )}
     </SHeader>
-  )
-}
+  );
+};
 
 Header.propTypes = {
   killSession: PropTypes.func.isRequired,
-  address: PropTypes.string
-}
+  address: PropTypes.string,
+};
 
-export default Header
+export default Header;
