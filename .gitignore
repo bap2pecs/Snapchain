@@ -3,3 +3,4 @@ contract/cache
 contract/out
 contract/broadcast
 contract/.env
+.env
