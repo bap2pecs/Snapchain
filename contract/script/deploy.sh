@@ -1,0 +1,1 @@
+forge script Deploy.s.sol:Deploy --rpc-url $GOERLI_RPC_URL --broadcast --verify -vvvv
