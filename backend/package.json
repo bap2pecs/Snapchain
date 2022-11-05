@@ -8,9 +8,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "it-pipe": "^2.0.4",
-    "uint8arrays": "^4.0.2",
+    "@chainsafe/libp2p-noise": "^10.0.1",
     "@grpc/grpc-js": "^1.7.3",
-    "@grpc/proto-loader": "^0.7.3"
+    "@grpc/proto-loader": "^0.7.3",
+    "@libp2p/bootstrap": "^5.0.0",
+    "@libp2p/mplex": "^7.0.0",
+    "@libp2p/websockets": "^5.0.0",
+    "it-pipe": "^2.0.4",
+    "libp2p": "^0.40.0",
+    "uint8arrays": "^4.0.2"
   }
 }
