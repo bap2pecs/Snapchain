@@ -1,7 +1,10 @@
+import { randomIntFromInterval } from '../random/randomNum.js';
+
 export async function genChainId() {
   // TODOs:
-  // - generate a random chain id
   // - avoid chain ids at chainlist.org
   // - avoid choosing a chainId in the local redis database
-  return 1234321;
+
+  // TODO: choose a more meaningful range. how to scale when over 100k chains
+  return randomIntFromInterval(10000, 99999);
 }
