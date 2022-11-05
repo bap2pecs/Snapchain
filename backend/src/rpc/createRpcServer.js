@@ -8,6 +8,7 @@ import { genChainId } from '../chainId/genChainId.js';
 import { createGenesisFile } from '../genesis/createGenesisFile.js';
 import { initGenesisBlock } from '../genesis/initGenesisBlock.js';
 import { randomIntFromInterval } from '../random/randomNum.js';
+import { createNodeKeyFile } from '../geth/createNodeKeyFile.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PROTO_PATH = __dirname + '/snap.proto';
@@ -39,19 +40,23 @@ function createChainFactory(node) {
     const port = randomIntFromInterval(1025, 65536);
     // 3. create a genesis file
     const datadir = `${process.env.HOME}/.ethereum/snapchain/${chainId}`;
-    const file = `${datadir}/genesis.json`;
+    const genesisFile = `${datadir}/genesis.json`;
     // TODO: fix the addresses. these are just random fake ones
     await createGenesisFile(
-      file,
+      genesisFile,
       chainId,
       '25bd2c1f21c4603355b9456dd97d9d2c098a1d46',
       '40640236ca267cea54e0e545ca2363032a05fc08',
       call.request.depositor
     );
     // 4. init the genesis block
-    await initGenesisBlock(file, datadir);
+    await initGenesisBlock(genesisFile, datadir);
 
-    // 5. start the geth instance
+    // 5. generate the node key file
+    const nodeKeyFile = await createNodeKeyFile(datadir);
+
+    // 6. start the geth instance
+    // - create the docker file
     // - `--datadir` will be ~/.ethereum/snapchain/<chainId>
     // - become a bootnode itself
     // 5. schedule a task to enter grace period
