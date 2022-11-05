@@ -10,6 +10,7 @@
 2. create `.env` following `.env.example`
 
     replace `SEALER_ADDRESS_1` with your account address
+    fix `KEYSTORE_DIR`
   
 
 

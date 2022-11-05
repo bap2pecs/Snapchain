@@ -1,9 +1,8 @@
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
 import { pipe } from 'it-pipe';
 import { fromString as uint8ArrayFromString } from 'uint8arrays/from-string';
 import grpc from '@grpc/grpc-js';
 import protoLoader from '@grpc/proto-loader';
+import { __dirname } from '../utils/dirName.js';
 import { genChainId } from '../chainId/genChainId.js';
 import { createGenesisFile } from '../genesis/createGenesisFile.js';
 import { initGenesisBlock } from '../genesis/initGenesisBlock.js';
@@ -12,7 +11,6 @@ import { createNodeKeyFile } from '../geth/createNodeKeyFile.js';
 import { createComposeFile } from '../geth/createComposeFile.js';
 import { copyKeystore } from '../geth/copyKeystore.js';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const PROTO_PATH = __dirname + '/snap.proto';
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
@@ -64,7 +62,6 @@ function createChainFactory(node) {
     await copyKeystore(datadir + '/keystore');
 
     // 7. create the compose file
-
     const composeFile = await createComposeFile(
       datadir,
       nodeKeyFile,
@@ -72,11 +69,8 @@ function createChainFactory(node) {
       chainId
     );
 
-    // 6. start the geth instance
-    // - create the docker file
-    // - `--datadir` will be ~/.ethereum/snapchain/<chainId>
-    // - become a bootnode itself
-    // 5. schedule a task to enter grace period
+    // 8. start the geth instance
+    // 9. schedule a task to enter grace period
     // - read ttl from the contract
 
     // Broadcast message to network
