@@ -112,7 +112,6 @@ export function createRpcServer(addr, node) {
   const createChainFunc = createChainFactory(node);
   server.addService(snap_proto.Snap.service, {
     createChain: createChainFunc,
-    destoryChain: destroyChainFunc,
   });
   server.bindAsync(addr, grpc.ServerCredentials.createInsecure(), () => {
     server.start();
