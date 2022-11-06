@@ -27,7 +27,7 @@ const snap_proto = grpc.loadPackageDefinition(packageDefinition).snap;
 /**
  * Implements the RPC method.
  */
-function createChainFactory(node) {
+function createChainFactory(node, nodeName) {
   return async (call, callback) => {
     console.log(call.request);
 
@@ -38,7 +38,7 @@ function createChainFactory(node) {
     // 2. select a random chain id
     const chainId = await genChainId();
     // 3. create a genesis file
-    const datadir = `${process.env.HOME}/.ethereum/snapchain/${chainId}`;
+    const datadir = `${process.env.HOME}/.ethereum/snapchain/${nodeName}/${chainId}`;
     const genesisFile = `${datadir}/genesis.json`;
     // TODO: fix the addresses. these are just random fake ones
     await createGenesisFile(
@@ -107,9 +107,9 @@ function createChainFactory(node) {
   };
 }
 
-export function createRpcServer(addr, node) {
+export function createRpcServer(addr, node, nodeName) {
   const server = new grpc.Server();
-  const createChainFunc = createChainFactory(node);
+  const createChainFunc = createChainFactory(node, nodeName);
   server.addService(snap_proto.Snap.service, {
     createChain: createChainFunc,
   });

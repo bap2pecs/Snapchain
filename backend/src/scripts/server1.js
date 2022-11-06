@@ -11,5 +11,5 @@ import { createRpcServer } from '../rpc/createRpcServer.js';
   const rpcServerAddrs = argv[1];
 
   const p2pNode = await createP2pNode(listenAddrs);
-  createRpcServer(rpcServerAddrs, p2pNode);
+  createRpcServer(rpcServerAddrs, p2pNode, 'node1');
 })();
