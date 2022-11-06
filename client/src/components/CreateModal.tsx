@@ -8,6 +8,14 @@ import { Modal, Input, Card, Row, Col, Button } from "antd";
 interface ICreateModalProps {
   isCreateOpen: boolean;
   showCreateModal: () => void;
+  handleOnSubmit: (
+    days: number,
+    hours: number,
+    minutes: number,
+    seconds: number,
+    networkName: string,
+    currency: string
+  ) => void;
 }
 
 const InputQuestion = styled.p`
@@ -84,7 +92,7 @@ const SConfirmButton = styled.button`
 `;
 
 const CreateModal = (props: ICreateModalProps) => {
-  const { isCreateOpen, showCreateModal } = props;
+  const { isCreateOpen, showCreateModal, handleOnSubmit } = props;
 
   const [days, setDays] = useState(0);
   const [hours, setHours] = useState(0);
@@ -92,7 +100,6 @@ const CreateModal = (props: ICreateModalProps) => {
   const [seconds, setSeconds] = useState(0);
   const [networkName, setNetworkName] = useState("");
   const [currency, setCurrency] = useState("");
-  const [price, setPrice] = useState(0);
 
   return (
     <Modal
@@ -170,7 +177,14 @@ const CreateModal = (props: ICreateModalProps) => {
         </Row>
       </Card>
       <SConfirmButtonContainer>
-        <SConfirmButton type="submit">Confirm</SConfirmButton>
+        <SConfirmButton
+          type="submit"
+          onClick={() =>
+            handleOnSubmit(days, hours, minutes, seconds, networkName, currency)
+          }
+        >
+          Confirm
+        </SConfirmButton>
       </SConfirmButtonContainer>
     </Modal>
   );
