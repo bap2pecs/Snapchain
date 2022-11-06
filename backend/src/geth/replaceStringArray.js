@@ -42,6 +42,8 @@ export function replaceStringArray(arr, pairs) {
           if (key == x[1]) {
             console.log('found')  
             newArr.push(str.replaceAll(x[1], value));
+          } else {
+            newArr.push(str);
           }
       }
     } else {
