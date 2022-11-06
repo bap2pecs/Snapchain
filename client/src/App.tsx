@@ -272,7 +272,9 @@ const App = () => {
             ) : (
               <SLanding>
                 {!connected && <ConnectButton onClick={onConnect} />}
-                {connected && <ChainList chains={chains} />}
+                {connected && (
+                  <ChainList chains={chains} setChains={setChains} />
+                )}
                 <CreateModal
                   isCreateOpen={isCreateOpen}
                   showCreateModal={showCreateModal}
