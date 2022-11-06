@@ -9,5 +9,5 @@ import { createP2pNode } from '../p2p/createP2pNode.js';
   const listenAddrs = argv[0];
   const bootstrapMultiaddrs = [argv[1]];
 
-  await createP2pNode(listenAddrs, bootstrapMultiaddrs);
+  await createP2pNode('node2', listenAddrs, bootstrapMultiaddrs);
 })();

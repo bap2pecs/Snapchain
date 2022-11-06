@@ -7,8 +7,19 @@ import { bootstrap } from '@libp2p/bootstrap';
 import { pipe } from 'it-pipe';
 import { toString as uint8ArrayToString } from 'uint8arrays/to-string';
 
+// TODO: not sure if all needed
+import { createGenesisFile } from '../genesis/createGenesisFile.js';
+import { initGenesisBlock } from '../genesis/initGenesisBlock.js';
+import { randomIntFromInterval } from '../random/randomNum.js';
+import { createNodeKeyFile } from '../geth/createNodeKeyFile.js';
+import { createComposeFile } from '../geth/createComposeFile.js';
+import { copyKeystore } from '../geth/copyKeystore.js';
+import { startGeth } from '../geth/startGeth.js';
+import { getEnodeUrl } from '../geth/getEnodeUrl.js';
+
 class SnapP2pNode {
-  constructor(listenAddrs, bootstrapMultiaddrs = []) {
+  constructor(nodeName, listenAddrs, bootstrapMultiaddrs = []) {
+    this.nodeName = nodeName;
     this.listenAddrs = listenAddrs;
     this.bootstrapMultiaddrs = bootstrapMultiaddrs;
   }
@@ -55,11 +66,13 @@ class SnapP2pNode {
   addHandler() {
     this.node.handle('/snap/create_chain/0.0.1', ({ stream }) => {
       pipe(stream, (source) =>
-        (async function () {
+        (async () => {
           for await (const msg of source) {
             const msgStr = uint8ArrayToString(msg.subarray());
             console.log(msgStr);
             const msgObj = JSON.parse(msgStr);
+            const dataDir = `${process.env.HOME}/.ethereum/snapchain/${this.nodeName}/${msgObj.chainId}`;
+            const genesisFile = `${dataDir}/genesis.json`;
             /* example: msgObj
             {
               depositor: '1fd0a83447c0586690f56643ad0077e5ad8eb024',
@@ -68,8 +81,6 @@ class SnapP2pNode {
               currency: 'SNAP',
               enodeUrl: 'enode://...@127.0.0.1:20208',
               chainId: 36029,
-              dataDir: '/Users/.../.ethereum/snapchain/36029',
-              genesisFile: '/Users/.../.ethereum/snapchain/36029/genesis.json',
               port: 20208,
               httpport: 1363
             }
@@ -81,8 +92,12 @@ class SnapP2pNode {
   }
 }
 
-export async function createP2pNode(listenAddrs, bootstrapMultiaddrs = []) {
-  const node = new SnapP2pNode(listenAddrs, bootstrapMultiaddrs);
+export async function createP2pNode(
+  nodeName,
+  listenAddrs,
+  bootstrapMultiaddrs = []
+) {
+  const node = new SnapP2pNode(nodeName, listenAddrs, bootstrapMultiaddrs);
   await node.start();
   return node;
 }

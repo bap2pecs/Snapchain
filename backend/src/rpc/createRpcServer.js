@@ -89,8 +89,6 @@ function createChainFactory(node, nodeName) {
     const msg = call.request;
     msg.enodeUrl = enodeUrl;
     msg.chainId = chainId;
-    msg.dataDir = datadir;
-    msg.genesisFile = genesisFile;
     msg.port = port;
     msg.httpport = httpport;
 
