@@ -43,6 +43,13 @@ export async function createComposeFile(
       doc.services.geth.volumes,
       pairs
     );
+    const composeFile = dataDir + '/docker-compose.yml';
+    fs.writeFile(composeFile, yaml.dump(doc), (err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+    return composeFile;
   } catch (e) {
     console.log(e);
   }

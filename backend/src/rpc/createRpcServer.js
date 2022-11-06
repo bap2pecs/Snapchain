@@ -108,10 +108,10 @@ function destroyChainFactory(node, chainId) {
 export function createRpcServer(addr, node, chainId) {
   const server = new grpc.Server();
   const createChainFunc = createChainFactory(node);
-  const destroyChainFunc = destroyChainFactory(node, chainId)
+  const destroyChainFunc = destroyChainFactory(node, chainId);
   server.addService(snap_proto.Snap.service, {
     createChain: createChainFunc,
-    destoryChain: destroyChainFunc
+    destoryChain: destroyChainFunc,
   });
   server.bindAsync(addr, grpc.ServerCredentials.createInsecure(), () => {
     server.start();

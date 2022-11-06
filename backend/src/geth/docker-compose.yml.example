@@ -25,4 +25,4 @@ services:
       - '<port>:<port>'
     restart: always
     volumes:
-      - <datadir>:<datadir>
+      - '<datadir>:<datadir>'
