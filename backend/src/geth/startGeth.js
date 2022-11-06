@@ -1,5 +1,6 @@
 import { execAsync } from '../utils/execAsync.js';
 
+// TODO: composeFile is not needed
 export async function startGeth(dataDir, composeFile) {
   let cmd = `cd ${dataDir} && `;
   // TODO: fix the assumptions

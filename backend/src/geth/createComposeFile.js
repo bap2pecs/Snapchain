@@ -16,12 +16,15 @@ export async function createComposeFile(
   // TODO: fix this hack
   let unlockAddress = '0x';
   let template = '';
+  let serviceName = '';
   if (nodeName === 'node1') {
     unlockAddress += process.env.SEALER_ADDRESS_1;
     template = process.env.COMPOSE_TEMPLATE;
+    serviceName = 'geth_one';
   } else {
     unlockAddress += process.env.SEALER_ADDRESS_2;
     template = process.env.COMPOSE_TEMPLATE_2;
+    serviceName = 'geth_two';
   }
   try {
     const content = fs.readFileSync(
@@ -42,22 +45,22 @@ export async function createComposeFile(
 
     // TODO: here we have assumptions on the structure of the yml file. not
     // sure how to fix it though
-    doc.services.geth.command = replaceStringArray(
-      doc.services.geth.command,
+    doc.services[serviceName].command = replaceStringArray(
+      doc.services[serviceName].command,
       pairs
     );
-    doc.services.geth.ports = replaceStringArray(
-      doc.services.geth.ports,
+    doc.services[serviceName].ports = replaceStringArray(
+      doc.services[serviceName].ports,
       pairs
     );
-    doc.services.geth.volumes = replaceStringArray(
-      doc.services.geth.volumes,
+    doc.services[serviceName].volumes = replaceStringArray(
+      doc.services[serviceName].volumes,
       pairs
     );
 
     // support Apple chips
     if (process.env.IS_APPLE_CHIP === 'true') {
-      doc.services.geth.platform = 'linux/amd64';
+      doc.services[serviceName].platform = 'linux/amd64';
     }
 
     const composeFile = dataDir + '/docker-compose.yml';

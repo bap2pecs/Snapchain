@@ -1,7 +1,7 @@
 services:
-  geth:
+  geth_two:
     image: ethereum/client-go
-    container_name: geth
+    container_name: geth_two
     command:
       [
         '--syncmode=full',

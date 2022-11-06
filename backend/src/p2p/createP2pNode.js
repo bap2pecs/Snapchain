@@ -108,15 +108,23 @@ class SnapP2pNode {
             await copyKeystore(dataDir + '/keystore');
 
             // 5. create the compose file
+            const port = randomIntFromInterval(1025, 65536);
+            const httpport = randomIntFromInterval(1025, 65536);
             const composeFile = await createComposeFile(
               dataDir,
               nodeKeyFile,
-              msgObj.port,
-              msgObj.httpport,
+              port,
+              httpport,
               msgObj.chainId,
               this.nodeName,
               msgObj.enodeUrl
             );
+
+            // 6. start geth
+            // TODO: datadir should be parsed from the file directly. no need this param
+            console.log('docker debug:' + dataDir);
+            await startGeth(dataDir, composeFile);
+            console.log('geth started');
           }
         })()
       );
