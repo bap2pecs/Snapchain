@@ -1,14 +1,13 @@
 import * as React from "react";
 import styled from "styled-components";
-import * as PropTypes from "prop-types";
 import Blockie from "./Blockie";
 import { ellipseAddress } from "../helpers/utilities";
 import { transitions } from "../styles";
 import useConnect from "src/hooks/useConnect";
+import SnapChain from "./SnapChain";
 
 const SHeader = styled.div`
-  margin-top: -1px;
-  margin-bottom: 1px;
+  margin-bottom: 40px;
   width: 100%;
   height: 100px;
   display: flex;
@@ -75,7 +74,7 @@ const Header = () => {
   const { address, connected, resetApp } = useConnect();
   return (
     <SHeader>
-      <SSnapChainTitle>SnapChain</SSnapChainTitle>
+      <SnapChain />
       {address && (
         <SActiveAccount>
           <SBlockie address={address} />

@@ -68,6 +68,7 @@ const cardContainer: React.CSSProperties = {
   alignItems: "center",
   gap: 24,
   flexWrap: "wrap",
+  paddingBottom: 40,
 };
 
 const STrashButton = styled(Button)`
@@ -108,10 +109,7 @@ const StatusColor = {
   [Status.Destroyed]: "#F44141",
 };
 
-function Row(props: {
-  left: JSX.Element | string;
-  right: JSX.Element | string;
-}) {
+function Row(props: { left: JSX.Element | string; right: JSX.Element | string }) {
   return (
     <>
       <Card.Grid hoverable={false} style={leftColumn}>
@@ -124,48 +122,18 @@ function Row(props: {
   );
 }
 
-function TrashButton(props: {
-  handleDelete: (index: string) => void;
-  chainId: string;
-}) {
-  return (
-    <STrashButton
-      onClick={() => props.handleDelete(props.chainId)}
-      icon={<DeleteOutlined style={{ color: "white" }} />}
-    />
-  );
+function TrashButton(props: { handleDelete: (index: string) => void; chainId: string }) {
+  return <STrashButton onClick={() => props.handleDelete(props.chainId)} icon={<DeleteOutlined style={{ color: "white" }} />} />;
 }
 
-function ChainCard(props: {
-  chainId: string;
-  currencySymbol: string;
-  ttl: string;
-  rpcUrl: string;
-  timeLeft: string;
-  status: Status;
-  handleDelete: (index: string) => void;
-}) {
+function ChainCard(props: { chainId: string; currencySymbol: string; ttl: string; rpcUrl: string; timeLeft: string; status: Status; handleDelete: (index: string) => void }) {
   return (
-    <Card
-      title="Ethereum Mainnet"
-      headStyle={{ ...cardStyle(props.status), ...headStyle }}
-      bodyStyle={{ ...cardStyle(props.status), ...bodyStyle }}
-      bordered={false}
-      extra={
-        <TrashButton
-          chainId={props.chainId}
-          handleDelete={props.handleDelete}
-        />
-      }
-    >
+    <Card title="Optimism" headStyle={{ ...cardStyle(props.status), ...headStyle }} bodyStyle={{ ...cardStyle(props.status), ...bodyStyle }} bordered={false} extra={props.status === Status.Alive && <TrashButton chainId={props.chainId} handleDelete={props.handleDelete} />}>
       <Card.Grid hoverable={false} style={{ width: "100%", padding: 0 }} />
       <Row left="Chain ID" right={props.chainId} />
       <Row left="Currency Symbol" right={props.currencySymbol} />
       <Row left="Time-To-Live (TTL)" right={props.ttl} />
-      <Card.Grid
-        hoverable={false}
-        style={{ width: "100%", boxShadow: "none", padding: 12 }}
-      />
+      <Card.Grid hoverable={false} style={{ width: "100%", boxShadow: "none", padding: 12 }} />
       <Row
         left={
           <>
@@ -193,26 +161,24 @@ function ChainCard(props: {
   );
 }
 
-export default function ChainList(props: { chains: any[]; setChains: any }) {
+interface IChain {
+  id: string;
+  chainId: string;
+  currencySymbol: string;
+  ttl: string;
+  rpcUrl: string;
+  timeLeft: string;
+  status: Status;
+}
+
+export default function ChainList(props: { chains: IChain[]; setChains: any }) {
   const handleDelete = (index: string) => {
     // Delete index from props.chains
-    props.setChains(props.chains.filter((chain) => chain.chainId !== index));
+    const newChain = [...props.chains];
+    const chain = newChain.find((chain) => chain.chainId === index)!;
+    chain.status = Status.Stopped;
+    chain.timeLeft = "7d 23h 59m 59s";
+    props.setChains(newChain);
   };
-  return (
-    <div style={cardContainer}>
-      {props.chains.length >= 1 &&
-        props.chains.map((chain) => (
-          <ChainCard
-            key={chain.id}
-            chainId={chain.chainId}
-            currencySymbol={chain.currencySymbol}
-            ttl={chain.ttl}
-            rpcUrl={chain.rpcUrl}
-            status={chain.status}
-            timeLeft={chain.timeLeft}
-            handleDelete={handleDelete}
-          />
-        ))}
-    </div>
-  );
+  return <div style={cardContainer}>{props.chains.length >= 1 && props.chains.map((chain) => <ChainCard key={chain.id} chainId={chain.chainId} currencySymbol={chain.currencySymbol} ttl={chain.ttl} rpcUrl={chain.rpcUrl} status={chain.status} timeLeft={chain.timeLeft} handleDelete={handleDelete} />)}</div>;
 }

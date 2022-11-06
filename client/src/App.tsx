@@ -50,71 +50,71 @@ const CHAINS = [
     ttl: "30d",
     rpcUrl: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
     timeLeft: "15d 20h 50m 45s",
-    status: Status.Stopped,
-  },
-  {
-    id: "4",
-    chainId: "0x4",
-    currencySymbol: "ETH",
-    ttl: "30d",
-    rpcUrl: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-    timeLeft: "15d 20h 50m 45s",
     status: Status.Destroyed,
   },
-  {
-    id: "5",
-    chainId: "0x5",
-    currencySymbol: "ETH",
-    ttl: "30d",
-    rpcUrl: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-    timeLeft: "15d 20h 50m 45s",
-    status: Status.Destroyed,
-  },
-  {
-    id: "6",
-    chainId: "0x6",
-    currencySymbol: "ETH",
-    ttl: "30d",
-    rpcUrl: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-    timeLeft: "15d 20h 50m 45s",
-    status: Status.Alive,
-  },
-  {
-    id: "7",
-    chainId: "0x7",
-    currencySymbol: "ETH",
-    ttl: "30d",
-    rpcUrl: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-    timeLeft: "15d 20h 50m 45s",
-    status: Status.Alive,
-  },
-  {
-    id: "8",
-    chainId: "0x8",
-    currencySymbol: "ETH",
-    ttl: "30d",
-    rpcUrl: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-    timeLeft: "15d 20h 50m 45s",
-    status: Status.Stopped,
-  },
-  {
-    id: "9",
-    chainId: "0x9",
-    currencySymbol: "ETH",
-    ttl: "30d",
-    rpcUrl: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-    timeLeft: "15d 20h 50m 45s",
-    status: Status.Destroyed,
-  },
-  {
-    id: "10",
-    chainId: "0x10",
-    currencySymbol: "ETH",
-    ttl: "30d",
-    rpcUrl: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-    timeLeft: "15d 20h 50m 45s",
-    status: Status.Destroyed,
-  },
+  // {
+  //   id: "4",
+  //   chainId: "0x4",
+  //   currencySymbol: "ETH",
+  //   ttl: "30d",
+  //   rpcUrl: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+  //   timeLeft: "15d 20h 50m 45s",
+  //   status: Status.Destroyed,
+  // },
+  // {
+  //   id: "5",
+  //   chainId: "0x5",
+  //   currencySymbol: "ETH",
+  //   ttl: "30d",
+  //   rpcUrl: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+  //   timeLeft: "15d 20h 50m 45s",
+  //   status: Status.Destroyed,
+  // },
+  // {
+  //   id: "6",
+  //   chainId: "0x6",
+  //   currencySymbol: "ETH",
+  //   ttl: "30d",
+  //   rpcUrl: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+  //   timeLeft: "15d 20h 50m 45s",
+  //   status: Status.Alive,
+  // },
+  // {
+  //   id: "7",
+  //   chainId: "0x7",
+  //   currencySymbol: "ETH",
+  //   ttl: "30d",
+  //   rpcUrl: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+  //   timeLeft: "15d 20h 50m 45s",
+  //   status: Status.Alive,
+  // },
+  // {
+  //   id: "8",
+  //   chainId: "0x8",
+  //   currencySymbol: "ETH",
+  //   ttl: "30d",
+  //   rpcUrl: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+  //   timeLeft: "15d 20h 50m 45s",
+  //   status: Status.Stopped,
+  // },
+  // {
+  //   id: "9",
+  //   chainId: "0x9",
+  //   currencySymbol: "ETH",
+  //   ttl: "30d",
+  //   rpcUrl: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+  //   timeLeft: "15d 20h 50m 45s",
+  //   status: Status.Destroyed,
+  // },
+  // {
+  //   id: "10",
+  //   chainId: "0x10",
+  //   currencySymbol: "ETH",
+  //   ttl: "30d",
+  //   rpcUrl: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+  //   timeLeft: "15d 20h 50m 45s",
+  //   status: Status.Destroyed,
+  // },
 ];
 
 const App = () => {
@@ -132,7 +132,7 @@ const App = () => {
     setCreateOpen(!isCreateOpen);
   };
 
-  async function createChain(tty: number) {
+  async function createChain(tty: number, ttl: string) {
     if (!window.ethereum) {
       return;
     }
@@ -201,32 +201,25 @@ const App = () => {
 
           snapService.createChain(request, {}, (err, response) => {
             // ...
-            console.log("response", response);
-            console.log("err", err);
-          });
+            if (err) {
+              console.log("error", err);
+            } else {
+              setChains([
+                ...chains,
+                {
+                  id: (chains.length + 1).toString(),
+                  chainId: "0x" + chains.length + 1,
+                  currencySymbol: "SNAP",
+                  ttl,
+                  rpcUrl: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+                  timeLeft: ttl,
+                  status: Status.Alive,
+                },
+              ]);
+            }
 
-          // var EchoServiceClient = proto.grpc.gateway.testing.EchoServiceClient;
-          // const client = new SnapClient("http://localhost:50051");
-          // var echoService = new EchoServiceClient('http://localhost:8080', null, null);
-          // var echoApp = new echoapp.EchoApp(
-          //   echoService,
-          //   {
-          //     EchoRequest: proto.grpc.gateway.testing.EchoRequest,
-          //     ServerStreamingEchoRequest: proto.grpc.gateway.testing.ServerStreamingEchoRequest
-          //   }
-          // );
-          // echoApp.load();
-          // // depositor: jspb.Message.getFieldWithDefault(msg, 1, ""),
-          // // nonce: jspb.Message.getFieldWithDefault(msg, 2, 0),
-          // // name: jspb.Message.getFieldWithDefault(msg, 3, ""),
-          // // currency: jspb.Message.getFieldWithDefault(msg, 4, "")
-          // const request = new CreateChainRequest();
-          // client.createChain(request, null, (err, response: CreateChainReply) => {
-          //   if (err) {
-          //     console.log("error: ", err);
-          //   }
-          //   console.log("Chain ID:", response);
-          // });
+            setCreateOpen(false);
+          });
         });
       })
       .catch((e: Error) => console.log(e));
@@ -235,24 +228,7 @@ const App = () => {
   const handleOnSubmit = async (days: number, hours: number, minutes: number, seconds: number, networkName: string, currency: string) => {
     console.log("values", days, hours, minutes, seconds, networkName, currency);
     const tty = days * 86400 + hours * 3600 + minutes * 60 + seconds;
-    await createChain(tty);
-
-    setChains([
-      ...chains,
-      {
-        id: (chains.length + 1).toString(),
-        chainId: "0x" + chains.length + 1,
-        currencySymbol: currency,
-        ttl: `${days}d ${hours}h ${minutes}m ${seconds}s`,
-        rpcUrl: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
-        timeLeft: `${days}d ${hours}h ${minutes}m ${seconds}s`,
-        status: Status.Alive,
-      },
-    ]);
-
-    console.log("chains", chains);
-
-    setCreateOpen(false);
+    await createChain(tty, `${days}d ${hours ? hours + "h" : ""} ${minutes ? minutes + "m" : ""} ${seconds ? seconds + "s" : ""}`);
   };
 
   // React.useEffect(() => {
