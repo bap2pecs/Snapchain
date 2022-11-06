@@ -1,7 +1,8 @@
 import React from "react";
-import ConnectButton from "./ConnectButton";
-import { Card } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
+import { Button, Card } from "antd";
 import texture from "../assets/texture.png";
+import styled from "styled-components";
 
 const value: React.CSSProperties = {
   fontFamily: "Martian Mono",
@@ -69,6 +70,26 @@ const cardContainer: React.CSSProperties = {
   flexWrap: "wrap",
 };
 
+const STrashButton = styled(Button)`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  gap: 8px;
+
+  width: 40px;
+  height: 40px;
+
+  /* On Secondary */
+
+  background: rgba(26, 26, 27, 0.4);
+  /* Grey */
+
+  border: 1px solid rgba(192, 192, 192, 0.2);
+  border-radius: 8px;
+`;
+
 enum Status {
   Alive = "Alive",
   Stopped = "Stopped",
@@ -103,6 +124,18 @@ function Row(props: {
   );
 }
 
+function TrashButton(props: {
+  handleDelete: (index: string) => void;
+  chainId: string;
+}) {
+  return (
+    <STrashButton
+      onClick={() => props.handleDelete(props.chainId)}
+      icon={<DeleteOutlined style={{ color: "white" }} />}
+    />
+  );
+}
+
 function ChainCard(props: {
   chainId: string;
   currencySymbol: string;
@@ -110,6 +143,7 @@ function ChainCard(props: {
   rpcUrl: string;
   timeLeft: string;
   status: Status;
+  handleDelete: (index: string) => void;
 }) {
   return (
     <Card
@@ -117,6 +151,12 @@ function ChainCard(props: {
       headStyle={{ ...cardStyle(props.status), ...headStyle }}
       bodyStyle={{ ...cardStyle(props.status), ...bodyStyle }}
       bordered={false}
+      extra={
+        <TrashButton
+          chainId={props.chainId}
+          handleDelete={props.handleDelete}
+        />
+      }
     >
       <Card.Grid hoverable={false} style={{ width: "100%", padding: 0 }} />
       <Row left="Chain ID" right={props.chainId} />
@@ -153,7 +193,11 @@ function ChainCard(props: {
   );
 }
 
-export default function ChainList(props: { chains: any[] }) {
+export default function ChainList(props: { chains: any[]; setChains: any }) {
+  const handleDelete = (index: string) => {
+    // Delete index from props.chains
+    props.setChains(props.chains.filter((chain) => chain.chainId !== index));
+  };
   return (
     <div style={cardContainer}>
       {props.chains.length >= 1 &&
@@ -166,6 +210,7 @@ export default function ChainList(props: { chains: any[] }) {
             rpcUrl={chain.rpcUrl}
             status={chain.status}
             timeLeft={chain.timeLeft}
+            handleDelete={handleDelete}
           />
         ))}
     </div>
