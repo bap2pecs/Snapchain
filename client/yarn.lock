@@ -1710,6 +1710,42 @@
     form-data "^4.0.0"
     opener "^1.5.2"
 
+"@protobuf-ts/plugin-framework@^2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@protobuf-ts/plugin-framework/-/plugin-framework-2.8.1.tgz#460fb04a5046d2d362c60bea541ce533def1c929"
+  integrity sha512-hfLoYIyxCI6Ro6LY1BltNBDcXWL+36SwnWR/hcF4ttPHLE3rMIpYbz4IwQsfeU2SKbBeGFhZv9rcnDJB22cXog==
+  dependencies:
+    "@protobuf-ts/runtime" "^2.8.1"
+    typescript "^3.9"
+
+"@protobuf-ts/plugin@^2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@protobuf-ts/plugin/-/plugin-2.8.1.tgz#66d96d42f95b6093499eff27bef6ff862cc34855"
+  integrity sha512-lacRdXJ9TkTbI28U0KApsnVqnxeq1aZftOdq6LNPQJaIzBrVRxrMkqnnGWGQFYe0Tr93OKeW4A2lLjTkn32CuA==
+  dependencies:
+    "@protobuf-ts/plugin-framework" "^2.8.1"
+    "@protobuf-ts/protoc" "^2.8.1"
+    "@protobuf-ts/runtime" "^2.8.1"
+    "@protobuf-ts/runtime-rpc" "^2.8.1"
+    typescript "^3.9"
+
+"@protobuf-ts/protoc@^2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@protobuf-ts/protoc/-/protoc-2.8.1.tgz#70b2e9fd281d20ab3abdd0ea6bd87b932aa1c0a4"
+  integrity sha512-6fehuL9bS22zCgPBBlESZjnoA4fxAUkOjMcaFMJSlVpN6CDN2O+c/Mo1pCXaNDO7FAidMPj5yhz48Kws4kOXEA==
+
+"@protobuf-ts/runtime-rpc@^2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@protobuf-ts/runtime-rpc/-/runtime-rpc-2.8.1.tgz#b7373c7d0fd604174054e7435379e449040077c2"
+  integrity sha512-hc+HJpoAu50by8aBS55UygcrzD8jAvRKWZMCRJ9XY3h9Gl2tciYysfzSH1SWtF6XOT/4b5CKnnmdMR3ad7uU5g==
+  dependencies:
+    "@protobuf-ts/runtime" "^2.8.1"
+
+"@protobuf-ts/runtime@^2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@protobuf-ts/runtime/-/runtime-2.8.1.tgz#e88f89650ab29c3eba0afebe32b9f3552f35fc85"
+  integrity sha512-D9M5hSumYCovIfNllt7N6ODh4q+LrjiMWtNETvooaf+a2XheZJ7kgjFlsFghti0CFWwtA//of4JXQfw9hU+cCw==
+
 "@rc-component/portal@^1.0.0-6", "@rc-component/portal@^1.0.0-8":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@rc-component/portal/-/portal-1.0.2.tgz#c14cdd21e7da42c0db417ce01c624df170349ec6"
@@ -6940,6 +6976,11 @@ globby@^6.1.0:
     pify "^2.0.0"
     pinkie-promise "^2.0.0"
 
+google-protobuf@^3.21.2:
+  version "3.21.2"
+  resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.21.2.tgz#4580a2bea8bbb291ee579d1fefb14d6fa3070ea4"
+  integrity sha512-3MSOYFO5U9mPGikIYCzK0SaThypfGgS6bHqrUGXG3DPHCrb+txNqeEcns1W0lkGfk0rCyNXm7xB9rMxnCiZOoA==
+
 gopd@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/gopd/-/gopd-1.0.1.tgz#29ff76de69dac7489b7c0918a5788e56477c332c"
@@ -6992,6 +7033,11 @@ growly@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
   integrity sha512-+xGQY0YyAWCnqy7Cd++hc2JqMYzlm0dG30Jd0beaA64sROr8C4nt8Yc9V5Ro3avlSUDTN0ulqP/VBKi1/lLygw==
+
+grpc-web@^1.4.2:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/grpc-web/-/grpc-web-1.4.2.tgz#86995f76471ce6b2119106ec26f909b7b69e7d43"
+  integrity sha512-gUxWq42l5ldaRplcKb4Pw5O4XBONWZgz3vxIIXnfIeJj8Jc3wYiq2O4c9xzx/NGbbPEej4rhI62C9eTENwLGNw==
 
 gzip-size@5.0.0:
   version "5.0.0"
@@ -14026,6 +14072,11 @@ typescript@3.8.3:
   version "3.8.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.8.3.tgz#409eb8544ea0335711205869ec458ab109ee1061"
   integrity sha512-MYlEfn5VrLNsgudQTVJeNaQFUAI7DkhnOjdpAp4T+ku1TfQClewlbSuTVHiA+8skNBgaf02TL/kLOvig4y3G8w==
+
+typescript@^3.9:
+  version "3.9.10"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.10.tgz#70f3910ac7a51ed6bef79da7800690b19bf778b8"
+  integrity sha512-w6fIxVE/H1PkLKcCPsFqKE7Kv7QUwhU8qQY2MueZXWx5cPZdwFupLgKK3vntcK98BtNHZtAF4LA/yl2a7k8R6Q==
 
 uglify-es@^3.3.4:
   version "3.3.9"

@@ -11,23 +11,13 @@ import Loader from "./components/Loader";
 import ChainList from "./components/ChainList";
 
 import useConnect from "./hooks/useConnect";
-import {
-  SLayout,
-  SSubHeader,
-  STitle,
-  SContent,
-  SContainer,
-  SLanding,
-} from "./App.styles";
+import { SLayout, SSubHeader, STitle, SContent, SContainer, SLanding } from "./App.styles";
 import CreateModal from "./components/CreateModal";
 import ConnectButton from "./components/ConnectButton";
 import CreateButton from "./components/CreateButton";
-import {
-  TransactionReceipt,
-  TransactionResponse,
-} from "@ethersproject/providers";
-import { EHOSTUNREACH } from "constants";
-import { getContractAddress } from "@ethersproject/address";
+import { TransactionReceipt, TransactionResponse } from "@ethersproject/providers";
+import { SnapClient } from "./grpc/SnapServiceClientPb";
+import { CreateChainReply, CreateChainRequest } from "./grpc/snap_pb";
 enum Status {
   Alive = "Alive",
   Stopped = "Stopped",
@@ -132,8 +122,7 @@ const App = () => {
 
   const snaptokenAddressContract = "0x15a8230EBad975689D01F9Dca62118990979a15e";
   const snapchainAddressContract = "0xAEF3829058a5c2A4F5e3c1c2BE7D84D5a86A567c";
-  const privateKey =
-    "83538b23ba561dae134818fa16ea939f84f80970f435414e0c967647a24a54af"; // LOOOOL
+  const privateKey = "83538b23ba561dae134818fa16ea939f84f80970f435414e0c967647a24a54af"; // LOOOOL
 
   const [isCreateOpen, setCreateOpen] = useState<boolean>(false);
   const [chains, setChains] = useState<any>(CHAINS);
@@ -150,18 +139,9 @@ const App = () => {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
 
-    const snapErc20: Contract = new ethers.Contract(
-      snaptokenAddressContract,
-      [
-        "function approve(address spender, uint256 amount) public returns (bool)",
-      ],
-      signer
-    );
+    const snapErc20: Contract = new ethers.Contract(snaptokenAddressContract, ["function approve(address spender, uint256 amount) public returns (bool)"], signer);
 
-    await snapErc20.approve(
-      snapchainAddressContract,
-      ethers.constants.MaxUint256
-    );
+    await snapErc20.approve(snapchainAddressContract, ethers.constants.MaxUint256);
 
     // const payload = ethers.utils.solidityKeccak256(
     //   ["bytes2", "bytes32", "bytes32"],
@@ -199,11 +179,7 @@ const App = () => {
     //   nonce
     // );
 
-    const snapChain: Contract = new ethers.Contract(
-      snapchainAddressContract,
-      snapchainabi,
-      signer
-    );
+    const snapChain: Contract = new ethers.Contract(snapchainAddressContract, snapchainabi, signer);
 
     // const { v, r, s } = await snapChain.splitSignature(result);
 
@@ -213,19 +189,50 @@ const App = () => {
         console.log(`TransactionResponse TX hash: ${tr.hash}`);
         tr.wait().then((receipt: TransactionReceipt) => {
           console.log("creation receipt", receipt);
+
+          const snapService = new SnapClient("http://localhost:8080");
+
+          const request = new CreateChainRequest();
+          // request.setMessage('Hello World!');
+          request.setNonce(1);
+          request.setCurrency("SNAP");
+          request.setName("Test");
+          request.setDepositor(receipt.from);
+
+          snapService.createChain(request, {}, (err, response) => {
+            // ...
+            console.log("response", response);
+            console.log("err", err);
+          });
+
+          // var EchoServiceClient = proto.grpc.gateway.testing.EchoServiceClient;
+          // const client = new SnapClient("http://localhost:50051");
+          // var echoService = new EchoServiceClient('http://localhost:8080', null, null);
+          // var echoApp = new echoapp.EchoApp(
+          //   echoService,
+          //   {
+          //     EchoRequest: proto.grpc.gateway.testing.EchoRequest,
+          //     ServerStreamingEchoRequest: proto.grpc.gateway.testing.ServerStreamingEchoRequest
+          //   }
+          // );
+          // echoApp.load();
+          // // depositor: jspb.Message.getFieldWithDefault(msg, 1, ""),
+          // // nonce: jspb.Message.getFieldWithDefault(msg, 2, 0),
+          // // name: jspb.Message.getFieldWithDefault(msg, 3, ""),
+          // // currency: jspb.Message.getFieldWithDefault(msg, 4, "")
+          // const request = new CreateChainRequest();
+          // client.createChain(request, null, (err, response: CreateChainReply) => {
+          //   if (err) {
+          //     console.log("error: ", err);
+          //   }
+          //   console.log("Chain ID:", response);
+          // });
         });
       })
       .catch((e: Error) => console.log(e));
   }
 
-  const handleOnSubmit = async (
-    days: number,
-    hours: number,
-    minutes: number,
-    seconds: number,
-    networkName: string,
-    currency: string
-  ) => {
+  const handleOnSubmit = async (days: number, hours: number, minutes: number, seconds: number, networkName: string, currency: string) => {
     console.log("values", days, hours, minutes, seconds, networkName, currency);
     const tty = days * 86400 + hours * 3600 + minutes * 60 + seconds;
     await createChain(tty);
@@ -272,14 +279,8 @@ const App = () => {
             ) : (
               <SLanding>
                 {!connected && <ConnectButton onClick={onConnect} />}
-                {connected && (
-                  <ChainList chains={chains} setChains={setChains} />
-                )}
-                <CreateModal
-                  isCreateOpen={isCreateOpen}
-                  showCreateModal={showCreateModal}
-                  handleOnSubmit={handleOnSubmit}
-                />
+                {connected && <ChainList chains={chains} setChains={setChains} />}
+                <CreateModal isCreateOpen={isCreateOpen} showCreateModal={showCreateModal} handleOnSubmit={handleOnSubmit} />
               </SLanding>
             )}
           </SContent>
