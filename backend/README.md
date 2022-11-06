@@ -1,17 +1,18 @@
 # Snapchain
 
 ## Pre-requisites
+0. create the password.txt file
+
+- `echo 123456 > /Users/<your username>/.ethereum/snapchain/password.txt`
+
 1. create an account on your host
 
-    `docker run --platform linux/amd64 -d --rm -v /Users/<your username>:/Users/<your username> ethereum/client-go:alltools-latest geth account new --datadir /Users/<your username>/.ethereum/snapchain --password /Users/<your username>/.ethereum/snapchain/password.txt`
-
-    then you can find the account address at `~/.ethereum/snapchain/keystore`
+- `docker run --platform linux/amd64 -d --rm -v /Users/<your username>:/Users/<your username> ethereum/client-go:alltools-latest geth account new --datadir /Users/<your username>/.ethereum/snapchain --password /Users/<your username>/.ethereum/snapchain/password.txt`
+- then you can find the account address at `~/.ethereum/snapchain/keystore`
 
 2. create `.env` following `.env.example`
-
-    replace `SEALER_ADDRESS_1` with your account address
-    fix `KEYSTORE_DIR`
-  
+- replace `SEALER_ADDRESS_1` with your account address
+- fix `KEYSTORE_DIR` and PASSWORD_FILE
 
 
 ## How to test

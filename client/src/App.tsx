@@ -142,40 +142,42 @@ const App = () => {
   };
 
   return (
-    <SLayout>
-      <Column maxWidth={1400} spanHeight>
-        <Header
-          connected={connected}
-          address={address}
-          chainId={chainId}
-          killSession={resetApp}
-        />
-        <SSubHeader>
-          <STitle>Chains</STitle>
-          <CreateButton onClick={showCreateModal} />
-        </SSubHeader>
+    <>
+      <SLayout>
+        <Column maxWidth={1400} spanHeight>
+          <Header
+            connected={connected}
+            address={address}
+            chainId={chainId}
+            killSession={resetApp}
+          />
+          <SSubHeader>
+            <STitle>Chains</STitle>
+            {connected && <CreateButton onClick={showCreateModal} />}
+          </SSubHeader>
 
-        <SContent>
-          {fetching ? (
-            <Column center>
-              <SContainer>
-                <Loader />
-              </SContainer>
-            </Column>
-          ) : (
-            <SLanding center>
-              {!connected && <ConnectButton onClick={onConnect} />}
-              <CreateModal
-                isCreateOpen={isCreateOpen}
-                showCreateModal={showCreateModal}
-                handleOnSubmit={handleOnSubmit}
-              />
-              <ChainList connected={connected} onConnect={onConnect} />
-            </SLanding>
-          )}
-        </SContent>
-      </Column>
-    </SLayout>
+          <SContent>
+            {fetching ? (
+              <Column center>
+                <SContainer>
+                  <Loader />
+                </SContainer>
+              </Column>
+            ) : (
+              <SLanding>
+                {!connected && <ConnectButton onClick={onConnect} />}
+                {connected && <ChainList />}
+                <CreateModal
+                  isCreateOpen={isCreateOpen}
+                  showCreateModal={showCreateModal}
+                  handleOnSubmit={handleOnSubmit}
+                />
+              </SLanding>
+            )}
+          </SContent>
+        </Column>
+      </SLayout>
+    </>
   );
 };
 export default App;

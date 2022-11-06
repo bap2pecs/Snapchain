@@ -16,6 +16,11 @@ message CreateChainRequest {
   // TODO: add extra_data for customized genesis file
 }
 
+message DestoryChainRequest {
+  string depositor = 1;
+  int32 nonce = 0;
+}
+
 message CreateChainReply {
   int32 chain_id = 1;
 }

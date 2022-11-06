@@ -30,4 +30,14 @@ example return:
 
 should return a new array of strings that applies the replacements
 */
-export function replaceStringArray(arr, pairs) {}
+export function replaceStringArray(arr, pairs) {
+  let newArr = [];
+  for (let i = 0; i < arr.length; i++) {
+    let str = arr[i];
+    for (const [key, value] of Object.entries(pairs)) {
+      str = str.replaceAll(key, value);
+    }
+    newArr.push(str);
+  }
+  return newArr;
+}

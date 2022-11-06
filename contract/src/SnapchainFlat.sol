@@ -1483,6 +1483,9 @@ contract Snapchain {
         uint256 price = _ttl_in_sec * secondPrice;
         if (snap.balanceOf(msg.sender) < price) revert NotEnoughSnapTokens(price);
         
+        snap.permit(msg.sender, address(this), price, block.timestamp, v, r, s);
+        snap.transferFrom(msg.sender, address(this), price);
+        
         ChainData memory newChainData = ChainData({
             secondPrice: secondPrice,
             depositValue: price,
@@ -1491,10 +1494,7 @@ contract Snapchain {
             isActive: true
         });
 
-        chains[msg.sender].push(newChainData);
-                
-        snap.permit(msg.sender, address(this), price, block.timestamp, v, r, s);
-        snap.transferFrom(msg.sender, address(this), price);
+        chains[msg.sender].push(newChainData);                
 
         emit ChainCreated(msg.sender, price, _ttl_in_sec, block.timestamp, chains[msg.sender].length);
     }
@@ -1531,6 +1531,16 @@ contract Snapchain {
         secondPrice = _secondPrice;
 
         emit SecondPriceChanged(_secondPrice);
+    }
+
+    // SIGNATURE HELPER
+    function splitSignature(bytes memory sig) public pure returns (bytes32 r, bytes32 s, uint8 v){
+        require(sig.length == 65, "invalid signature length");
+        assembly {
+            r := mload(add(sig, 32))
+            s := mload(add(sig, 64))
+            v := byte(0, mload(add(sig, 96)))
+        }
     }
 }
 

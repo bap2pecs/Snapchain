@@ -10,6 +10,7 @@ import { randomIntFromInterval } from '../random/randomNum.js';
 import { createNodeKeyFile } from '../geth/createNodeKeyFile.js';
 import { createComposeFile } from '../geth/createComposeFile.js';
 import { copyKeystore } from '../geth/copyKeystore.js';
+import { startGeth } from '../geth/startGeth.js';
 
 const PROTO_PATH = dirName(import.meta.url) + '/snap.proto';
 
@@ -33,11 +34,8 @@ function createChainFactory(node) {
     // 1. input validation
     // - check nonce and alive in the contract
     // - check the local DB does not have the (depositor, nonce) combination
-    // 2. select a random chain id and port number
-    // - avoid choosing a port number in use
+    // 2. select a random chain id
     const chainId = await genChainId();
-    // 0 to 1024 are reserved for privileged services
-    const port = randomIntFromInterval(1025, 65536);
     // 3. create a genesis file
     const datadir = `${process.env.HOME}/.ethereum/snapchain/${chainId}`;
     const genesisFile = `${datadir}/genesis.json`;
@@ -62,15 +60,27 @@ function createChainFactory(node) {
     await copyKeystore(datadir + '/keystore');
 
     // 7. create the compose file
+    // TODO: avoid choosing a port number in use
+    // 0 to 1024 are reserved for privileged services
+    const port = randomIntFromInterval(1025, 65536);
+    const httpport = randomIntFromInterval(1025, 65536);
     const composeFile = await createComposeFile(
       datadir,
       nodeKeyFile,
       port,
+      httpport,
       chainId
     );
 
     // 8. start the geth instance
-    // 9. schedule a task to enter grace period
+    // TODO: datadir should be parsed from the file directly. no need this param
+    await startGeth(datadir, composeFile);
+    console.log('geth started');
+
+    // 9. read the logs and extract enode url
+    // TODO: wait for some seconds so encode url will be there
+
+    // x. schedule a task to enter grace period
     // - read ttl from the contract
 
     // Broadcast message to network
@@ -80,25 +90,29 @@ function createChainFactory(node) {
       '/snap/create_chain/0.0.1',
     ]);
     // TODO: this is not the real msg
-    await pipe(
-      [
-        uint8ArrayFromString(
-          'from the Snap proto: ' + JSON.stringify(call.request)
-        ),
-      ],
-      stream
-    );
+    await pipe([uint8ArrayFromString(JSON.stringify(call.request))], stream);
 
     // TODO: replace hardcoded chain_id
     callback(null, { chain_id: chainId });
   };
 }
 
-export function createRpcServer(addr, node) {
+function destroyChainFactory(node, chainId) {
+  return async (call, callback) => {
+    console.log(call.request);
+    const datadir = `${process.env.HOME}/.ethereum/snapchain/${chainId}`;
+    // stop geth instance
+    callback(null, { chain_id: call.request.chainId });
+  };
+}
+
+export function createRpcServer(addr, node, chainId) {
   const server = new grpc.Server();
   const createChainFunc = createChainFactory(node);
+  const destroyChainFunc = destroyChainFactory(node, chainId);
   server.addService(snap_proto.Snap.service, {
     createChain: createChainFunc,
+    destoryChain: destroyChainFunc,
   });
   server.bindAsync(addr, grpc.ServerCredentials.createInsecure(), () => {
     server.start();
