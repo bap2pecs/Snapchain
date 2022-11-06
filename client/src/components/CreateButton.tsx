@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 
-const SDepositButtonContainer = styled.div`
+const SCreateButtonContainer = styled.div`
   position: relative;
   width: 100%;
   height: auto;
@@ -13,12 +13,12 @@ const SDepositButtonContainer = styled.div`
   margin-left: auto;
 `;
 
-interface IDepositButtonStyleProps {
+interface ICreateButtonStyleProps {
   disabled: boolean;
   icon?: any;
 }
 
-interface IDepositButtonProps extends IDepositButtonStyleProps {
+interface ICreateButtonProps extends ICreateButtonStyleProps {
   onClick?: any;
 }
 
@@ -45,7 +45,7 @@ const SIcon = styled.div`
   top: calc((100% - 28px) / 2);
 `;
 
-const SDepositButton = styled.button<IDepositButtonStyleProps>`
+const SCreateButton = styled.button<ICreateButtonStyleProps>`
   transition: all 0.15s ease-in-out;
   position: relative;
   line-height: 1em;
@@ -114,19 +114,19 @@ const SDepositButton = styled.button<IDepositButtonStyleProps>`
   }
 `;
 
-const DepositButton = (props: IDepositButtonProps) => (
-  <SDepositButtonContainer>
-    <SDepositButton type="button" icon={props.icon} {...props}>
+const CreateButton = (props: ICreateButtonProps) => (
+  <SCreateButtonContainer>
+    <SCreateButton type="button" icon={props.icon} {...props}>
       <SHoverLayer />
       <SIcon />
       {"+ Create New Chain"}
-    </SDepositButton>
-  </SDepositButtonContainer>
+    </SCreateButton>
+  </SCreateButtonContainer>
 );
 
-DepositButton.defaultProps = {
+CreateButton.defaultProps = {
   disabled: false,
   icon: null,
 };
 
-export default DepositButton;
+export default CreateButton;
