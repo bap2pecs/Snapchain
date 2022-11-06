@@ -85,6 +85,27 @@ class SnapP2pNode {
               httpport: 1363
             }
             */
+
+            // 1. create a genesis file
+            await createGenesisFile(
+              genesisFile,
+              msgObj.chainId,
+              process.env.SEALER_ADDRESS_1,
+              process.env.SEALER_ADDRESS_2,
+              msgObj.depositor
+            );
+
+            // 2. init the genesis block
+            await initGenesisBlock(genesisFile, dataDir);
+
+            // 3. generate the node key file
+            const nodeKeyFile = await createNodeKeyFile(dataDir);
+
+            // 4. copy the keystore dir from ~/.ethereum/snapchain/keystore
+            // to <datadir>/keystore
+            // TODO: not sure if it makes sense to copy it instead of creating a new
+            // account for each chain. need some discussion
+            await copyKeystore(dataDir + '/keystore');
           }
         })()
       );
