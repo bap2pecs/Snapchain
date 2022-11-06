@@ -26,3 +26,4 @@ services:
     restart: always
     volumes:
       - '<datadir>:<datadir>'
+      - '<password>:<password>'
