@@ -1,10 +1,10 @@
 import * as React from "react";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import styled from "styled-components";
 
-import { Modal, Input, Card, Row, Col, Button } from "antd";
-import { deposit, secondPrice } from "src/tx/Snapchain";
+import { Modal, Input, Card, Row, Col } from "antd";
+import { secondPrice } from "src/tx/Snapchain";
 
 interface ICreateModalProps {
   isCreateOpen: boolean;
@@ -89,57 +89,27 @@ const SConfirmButton = styled.button`
 const CreateModal = (props: ICreateModalProps) => {
   const { isCreateOpen, showCreateModal, handleOnSubmit } = props;
 
-  const [days, setDays] = useState(10);
-  const [hours, setHours] = useState(10);
-  const [minutes, setMinutes] = useState(20);
-  const [seconds, setSeconds] = useState(30);
+  const [days, setDays] = useState(30);
+  const [hours, setHours] = useState(0);
+  const [minutes, setMinutes] = useState(0);
+  const [seconds, setSeconds] = useState(0);
   const [networkName, setNetworkName] = useState("Test");
   const [currency, setCurrency] = useState("GOR");
   const [pricePerSecond, setPricePerSecond] = useState<string | number>("--");
   const [loading, setLoading] = useState(false);
   const [totalCost, setTotalCost] = useState<string | number>("--");
-  const [TTLSeconds, setTTLSeconds] = useState(0);
-  const createChain = useCallback(
-    async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      // set loading
-      setLoading(true);
-      // send tx
-      await deposit(TTLSeconds);
-      console.log("send tx", days, hours, minutes, seconds);
 
-      // grpc call
-      console.log("send grpc", networkName, currency);
-      // close modal
-      setTimeout(() => {
-        setLoading(false);
-        showCreateModal();
-      }, 2000);
-      console.log({
-        days,
-        hours,
-        minutes,
-        seconds,
-        networkName,
-        currency,
-        pricePerSecond,
-      });
-    },
-    [days, hours, minutes, seconds, networkName, currency, pricePerSecond, TTLSeconds]
-  );
   useEffect(() => {
     (async () => {
-      setLoading(true);
       const price = await secondPrice();
       console.log("return price", price);
       // get price per second
       setPricePerSecond(price);
-      setLoading(false);
     })();
   }, []);
+
   useEffect(() => {
     const ttlSeconds = days * 86400 + hours * 3600 + minutes * 60 + seconds;
-    setTTLSeconds(ttlSeconds);
     if (loading) {
       return;
     }
@@ -150,8 +120,9 @@ const CreateModal = (props: ICreateModalProps) => {
   return (
     <Modal title="Create Chain" open={isCreateOpen} onOk={showCreateModal} onCancel={showCreateModal} footer={null}>
       <form
-        onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+        onSubmit={async (e: React.FormEvent<HTMLFormElement>) => {
           e.preventDefault();
+          setLoading(true);
           handleOnSubmit(days, hours, minutes, seconds, networkName, currency);
         }}
       >
@@ -164,42 +135,14 @@ const CreateModal = (props: ICreateModalProps) => {
         </Input.Group>
 
         <InputQuestion>Network Name</InputQuestion>
-        <Input placeholder="---" style={{ width: "400px" }} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNetworkName(e.target.value)} value={networkName} />
+        <Input placeholder="---" style={{ width: "100%" }} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNetworkName(e.target.value)} value={networkName} />
 
         <InputQuestion>Currency Symbol</InputQuestion>
-        <Input placeholder="---" style={{ width: "400px" }} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCurrency(e.target.value)} value={currency} />
-        {/* <Card
-        style={{
-          width: 400,
-          margin: "8px 0px",
-          background: "rgba(192, 192, 192, 0.2)",
-          border: "1px solid rgba(192, 192, 192, 0.2)",
-          borderRadius: "8px",
-        }}
-      >
-        <Row>
-          <Col span={12}>
-            <SPriceLabel>Total Price</SPriceLabel>
-            <SUnitPriceLabel>-- SNAP</SUnitPriceLabel>
-          </Col>
-          <Col span={12}>
-            <SCalculatedPrice>-- SNAP</SCalculatedPrice>
-          </Col>
-        </Row>
-      </Card>
-      <SConfirmButtonContainer>
-        <SConfirmButton
-          type="submit"
-          onClick={() =>
-            handleOnSubmit(days, hours, minutes, seconds, networkName, currency)
-          }
-        >
-          Confirm
-        </SConfirmButton>
-      </SConfirmButtonContainer> */}
+        <Input placeholder="---" style={{ width: "100%" }} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCurrency(e.target.value)} value={currency} />
+
         <Card
           style={{
-            width: 400,
+            width: "100%",
             margin: "8px 0px",
             background: "rgba(192, 192, 192, 0.2)",
             border: "1px solid rgba(192, 192, 192, 0.2)",
@@ -209,10 +152,10 @@ const CreateModal = (props: ICreateModalProps) => {
           <Row>
             <Col span={12}>
               <SPriceLabel>Total Price</SPriceLabel>
-              <SUnitPriceLabel>Unit Price: {pricePerSecond} SNAP</SUnitPriceLabel>
+              <SUnitPriceLabel>Unit Price: {pricePerSecond} $SNAP</SUnitPriceLabel>
             </Col>
             <Col span={12}>
-              <SCalculatedPrice>{totalCost} SNAP</SCalculatedPrice>
+              <SCalculatedPrice>{totalCost} $SNAP</SCalculatedPrice>
             </Col>
           </Row>
         </Card>

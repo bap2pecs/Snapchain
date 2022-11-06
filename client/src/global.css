@@ -1,8 +1,7 @@
 /*default version*/
 @font-face {
   font-family: "Martian Mono";
-  src: local("Martian Mono"),
-    url("fonts/martian_mono/ttf/MartianMono-StdRg.ttf") format("truetype");
+  src: local("Martian Mono"), url("fonts/martian_mono/ttf/MartianMono-StdRg.ttf") format("truetype");
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
@@ -11,7 +10,6 @@ body {
   font-family: "Inter", sans-serif;
   background-image: url(assets/Snapchain_Background.png);
   overflow: hidden;
-  padding-bottom: 20px;
 }
 #root {
   overflow: auto;
@@ -26,6 +24,7 @@ body {
 }
 .ant-modal-header {
   background: transparent;
+  border-bottom: none;
 }
 
 .ant-modal-title {
@@ -51,7 +50,7 @@ body {
   background: rgba(45, 45, 45, 0.8);
   border: 1px solid rgba(192, 192, 192, 0.2);
   border-radius: 8px;
-  margin: 2px;
+  margin: 8px;
 }
 
 .ant-input {

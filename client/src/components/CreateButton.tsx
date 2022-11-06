@@ -59,9 +59,8 @@ const SCreateButton = styled.button<ICreateButtonStyleProps>`
   background-color: white;
   border: none;
   color: black;
-  box-shadow: 0 4px 6px 0 rgba(50, 50, 93, 0.11),
-    0 1px 3px 0 rgba(0, 0, 0, 0.08), inset 0 0 1px 0 rgba(0, 0, 0, 0.06);
-  border-radius: 32px;
+  box-shadow: 0 4px 6px 0 rgba(50, 50, 93, 0.11), 0 1px 3px 0 rgba(0, 0, 0, 0.08), inset 0 0 1px 0 rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
   font-size: 16px;
   font-weight: 600;
   height: 48px;
@@ -73,17 +72,13 @@ const SCreateButton = styled.button<ICreateButtonStyleProps>`
 
   &:disabled {
     opacity: 0.7;
-    box-shadow: 0 4px 6px 0 rgba(50, 50, 93, 0.11),
-      0 1px 3px 0 rgba(0, 0, 0, 0.08), inset 0 0 1px 0 rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 6px 0 rgba(50, 50, 93, 0.11), 0 1px 3px 0 rgba(0, 0, 0, 0.08), inset 0 0 1px 0 rgba(0, 0, 0, 0.06);
   }
 
   @media (hover: hover) {
     &:hover {
       transform: ${({ disabled }) => (!disabled ? "translateY(-1px)" : "none")};
-      box-shadow: ${({ disabled }) =>
-        !disabled
-          ? `0 7px 14px 0 rgba(50, 50, 93, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.08), inset 0 0 1px 0 rgba(0, 0, 0, 0.06)`
-          : `0 4px 6px 0 rgba(50, 50, 93, 0.11), 0 1px 3px 0 rgba(0, 0, 0, 0.08), inset 0 0 1px 0 rgba(0, 0, 0, 0.06)`};
+      box-shadow: ${({ disabled }) => (!disabled ? `0 7px 14px 0 rgba(50, 50, 93, 0.1), 0 3px 6px 0 rgba(0, 0, 0, 0.08), inset 0 0 1px 0 rgba(0, 0, 0, 0.06)` : `0 4px 6px 0 rgba(50, 50, 93, 0.11), 0 1px 3px 0 rgba(0, 0, 0, 0.08), inset 0 0 1px 0 rgba(0, 0, 0, 0.06)`)};
     }
 
     &:hover ${SHoverLayer} {
@@ -94,8 +89,7 @@ const SCreateButton = styled.button<ICreateButtonStyleProps>`
 
   &:active {
     transform: ${({ disabled }) => (!disabled ? "translateY(1px)" : "none")};
-    box-shadow: 0 4px 6px 0 rgba(50, 50, 93, 0.11),
-      0 1px 3px 0 rgba(0, 0, 0, 0.08), inset 0 0 1px 0 rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 6px 0 rgba(50, 50, 93, 0.11), 0 1px 3px 0 rgba(0, 0, 0, 0.08), inset 0 0 1px 0 rgba(0, 0, 0, 0.06);
     color: rgba(255, 255, 255, 0.7);
 
     & ${SIcon} {
