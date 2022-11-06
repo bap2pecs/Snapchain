@@ -8,7 +8,8 @@
 /*default version*/
 @font-face {
   font-family: "Martian Mono";
-  src: local("Martian Mono"), url("fonts/martian_mono/ttf/MartianMono-StdRg.ttf") format("truetype");
+  src: local("Martian Mono"),
+    url("fonts/martian_mono/ttf/MartianMono-StdRg.ttf") format("truetype");
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
@@ -23,9 +24,6 @@ body {
   overflow: auto;
 }
 /* ant overrides */
-.ant-modal-content {
-  background: aliceblue;
-}
 .ant-modal-header {
   background: transparent;
 }
