@@ -22,7 +22,7 @@ services:
       ]
     ports:
       - '<httpport>:<httpport>'
-      - '<port>:<port>/udp'
+      - '<port>:<port>'
     restart: always
     volumes:
       - '<datadir>:<datadir>'
