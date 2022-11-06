@@ -30,4 +30,25 @@ example return:
 
 should return a new array of strings that applies the replacements
 */
-export function replaceStringArray(arr, pairs) {}
+export function replaceStringArray(arr, pairs) {
+  let newArr = [];
+  for (let i = 0; i < arr.length; i++) {
+    let str = arr[i];
+    if (str.includes('<')) {
+      x = str.split('=');
+      for (const [key, value] of Object.entries(pairs)) {
+          // console.log(key, value);
+          // console.log(x[1])
+          if (key == x[1]) {
+            console.log('found')  
+            newArr.push(str.replaceAll(x[1], value));
+          } else {
+            newArr.push(str);
+          }
+      }
+    } else {
+        newArr.push(str);
+    }
+  }
+  return newArr; 
+}
