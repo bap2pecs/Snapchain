@@ -10,6 +10,7 @@ import { randomIntFromInterval } from '../random/randomNum.js';
 import { createNodeKeyFile } from '../geth/createNodeKeyFile.js';
 import { createComposeFile } from '../geth/createComposeFile.js';
 import { copyKeystore } from '../geth/copyKeystore.js';
+import { startGeth } from '../geth/startGeth.js';
 
 const PROTO_PATH = dirName(import.meta.url) + '/snap.proto';
 
@@ -72,7 +73,13 @@ function createChainFactory(node) {
     );
 
     // 8. start the geth instance
-    // 9. schedule a task to enter grace period
+    await startGeth(composeFile);
+    console.log('geth started');
+
+    // 9. read the logs and extract enode url
+    // TODO: wait for some seconds so encode url will be there
+
+    // x. schedule a task to enter grace period
     // - read ttl from the contract
 
     // Broadcast message to network
@@ -82,14 +89,7 @@ function createChainFactory(node) {
       '/snap/create_chain/0.0.1',
     ]);
     // TODO: this is not the real msg
-    await pipe(
-      [
-        uint8ArrayFromString(
-          'from the Snap proto: ' + JSON.stringify(call.request)
-        ),
-      ],
-      stream
-    );
+    await pipe([uint8ArrayFromString(JSON.stringify(call.request))], stream);
 
     // TODO: replace hardcoded chain_id
     callback(null, { chain_id: chainId });
