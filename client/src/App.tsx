@@ -8,27 +8,13 @@ import Loader from "./components/Loader";
 import ChainList from "./components/ChainList";
 
 import useConnect from "./hooks/useConnect";
-import {
-  SLayout,
-  SSubHeader,
-  STitle,
-  SContent,
-  SContainer,
-  SLanding,
-} from "./App.styles";
+import { SLayout, SSubHeader, STitle, SContent, SContainer, SLanding } from "./App.styles";
 import CreateModal from "./components/CreateModal";
 import ConnectButton from "./components/ConnectButton";
 import CreateButton from "./components/CreateButton";
 
 const App = () => {
-  const {
-    fetching,
-    address,
-    connected,
-    chainId,
-    resetApp,
-    onConnect,
-  } = useConnect();
+  const { fetching, address, connected, chainId, resetApp, onConnect } = useConnect();
 
   const [isCreateOpen, setCreateOpen] = useState<boolean>(false);
 
@@ -38,39 +24,34 @@ const App = () => {
   };
 
   return (
-    <SLayout>
-      <Column maxWidth={1400} spanHeight>
-        <Header
-          connected={connected}
-          address={address}
-          chainId={chainId}
-          killSession={resetApp}
-        />
-        <SSubHeader>
-          <STitle>Chains</STitle>
-          <CreateButton onClick={showCreateModal} />
-        </SSubHeader>
+    <>
+      <SLayout>
+        <Column maxWidth={1400} spanHeight>
+          <Header connected={connected} address={address} chainId={chainId} killSession={resetApp} />
+          <SSubHeader>
+            <STitle>Chains</STitle>
+            {connected && <CreateButton onClick={showCreateModal} />}
+          </SSubHeader>
 
-        <SContent>
-          {fetching ? (
-            <Column center>
-              <SContainer>
-                <Loader />
-              </SContainer>
-            </Column>
-          ) : (
-            <SLanding center>
-              {!connected && <ConnectButton onClick={onConnect} />}
-              <CreateModal
-                isCreateOpen={isCreateOpen}
-                showCreateModal={showCreateModal}
-              />
-              <ChainList connected={connected} onConnect={onConnect} />
-            </SLanding>
-          )}
-        </SContent>
-      </Column>
-    </SLayout>
+          <SContent>
+            {fetching ? (
+              <Column center>
+                <SContainer>
+                  <Loader />
+                </SContainer>
+              </Column>
+            ) : (
+              <SLanding>
+                {!connected && <ConnectButton onClick={onConnect} />}
+                {connected && <ChainList />}
+              </SLanding>
+            )}
+          </SContent>
+        </Column>
+      </SLayout>
+
+      <CreateModal isCreateOpen={isCreateOpen} showCreateModal={showCreateModal} />
+    </>
   );
 };
 export default App;
