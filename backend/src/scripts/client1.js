@@ -30,7 +30,7 @@ function main() {
   client.createChain(
     {
       depositor: '1fd0a83447c0586690f56643ad0077e5ad8eb024',
-      nonce: 647291,
+      nonce: 0,
       name: 'Snap Testnet',
       currency: 'SNAP',
     },
