@@ -107,19 +107,9 @@ function createChainFactory(node) {
   };
 }
 
-function destroyChainFactory(node, chainId) {
-  return async (call, callback) => {
-    console.log(call.request);
-    const datadir = `${process.env.HOME}/.ethereum/snapchain/${chainId}`;
-    // stop geth instance
-    callback(null, { chain_id: call.request.chainId });
-  };
-}
-
-export function createRpcServer(addr, node, chainId) {
+export function createRpcServer(addr, node) {
   const server = new grpc.Server();
   const createChainFunc = createChainFactory(node);
-  const destroyChainFunc = destroyChainFactory(node, chainId);
   server.addService(snap_proto.Snap.service, {
     createChain: createChainFunc,
     destoryChain: destroyChainFunc,
