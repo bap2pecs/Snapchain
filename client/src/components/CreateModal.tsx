@@ -1,21 +1,15 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import styled from "styled-components";
 
 import { Modal, Input, Card, Row, Col, Button } from "antd";
+import { deposit, secondPrice } from "src/tx/Snapchain";
 
 interface ICreateModalProps {
   isCreateOpen: boolean;
   showCreateModal: () => void;
-  handleOnSubmit: (
-    days: number,
-    hours: number,
-    minutes: number,
-    seconds: number,
-    networkName: string,
-    currency: string
-  ) => void;
+  handleOnSubmit: (days: number, hours: number, minutes: number, seconds: number, networkName: string, currency: string) => void;
 }
 
 const InputQuestion = styled.p`
@@ -79,6 +73,7 @@ const SConfirmButton = styled.button`
   align-items: center;
   padding: 12px 24px;
   gap: 10px;
+  cursor: pointer;
 
   width: 103px;
   height: 40px;
@@ -94,70 +89,86 @@ const SConfirmButton = styled.button`
 const CreateModal = (props: ICreateModalProps) => {
   const { isCreateOpen, showCreateModal, handleOnSubmit } = props;
 
-  const [days, setDays] = useState(0);
-  const [hours, setHours] = useState(0);
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(0);
-  const [networkName, setNetworkName] = useState("");
-  const [currency, setCurrency] = useState("");
+  const [days, setDays] = useState(10);
+  const [hours, setHours] = useState(10);
+  const [minutes, setMinutes] = useState(20);
+  const [seconds, setSeconds] = useState(30);
+  const [networkName, setNetworkName] = useState("Test");
+  const [currency, setCurrency] = useState("GOR");
+  const [pricePerSecond, setPricePerSecond] = useState<string | number>("--");
+  const [loading, setLoading] = useState(false);
+  const [totalCost, setTotalCost] = useState<string | number>("--");
+  const [TTLSeconds, setTTLSeconds] = useState(0);
+  const createChain = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      // set loading
+      setLoading(true);
+      // send tx
+      await deposit(TTLSeconds);
+      console.log("send tx", days, hours, minutes, seconds);
+
+      // grpc call
+      console.log("send grpc", networkName, currency);
+      // close modal
+      setTimeout(() => {
+        setLoading(false);
+        showCreateModal();
+      }, 2000);
+      console.log({
+        days,
+        hours,
+        minutes,
+        seconds,
+        networkName,
+        currency,
+        pricePerSecond,
+      });
+    },
+    [days, hours, minutes, seconds, networkName, currency, pricePerSecond, TTLSeconds]
+  );
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      const price = await secondPrice();
+      console.log("return price", price);
+      // get price per second
+      setPricePerSecond(price);
+      setLoading(false);
+    })();
+  }, []);
+  useEffect(() => {
+    const ttlSeconds = days * 86400 + hours * 3600 + minutes * 60 + seconds;
+    setTTLSeconds(ttlSeconds);
+    if (loading) {
+      return;
+    }
+    const total = ttlSeconds * (pricePerSecond as number);
+    setTotalCost(total);
+  }, [days, hours, minutes, seconds, pricePerSecond, loading]);
 
   return (
-    <Modal
-      title="Create Chain"
-      open={isCreateOpen}
-      onOk={showCreateModal}
-      onCancel={showCreateModal}
-      footer={null}
-    >
-      <InputQuestion>Time-To-Live (TTL)</InputQuestion>
-      <Input.Group>
-        <Input
-          style={{ width: "20%" }}
-          addonAfter={"d"}
-          placeholder="00"
-          onChange={(e) => setDays(Number(e.target.value))}
-          value={days}
-        />
-        <Input
-          style={{ width: "20%" }}
-          addonAfter={"h"}
-          placeholder="00"
-          onChange={(e) => setHours(Number(e.target.value))}
-          value={hours}
-        />
-        <Input
-          style={{ width: "20%" }}
-          addonAfter={"m"}
-          placeholder="00"
-          onChange={(e) => setMinutes(Number(e.target.value))}
-          value={minutes}
-        />
-        <Input
-          style={{ width: "20%" }}
-          addonAfter={"s"}
-          placeholder="00"
-          onChange={(e) => setSeconds(Number(e.target.value))}
-          value={seconds}
-        />
-      </Input.Group>
+    <Modal title="Create Chain" open={isCreateOpen} onOk={showCreateModal} onCancel={showCreateModal} footer={null}>
+      <form
+        onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+          e.preventDefault();
+          handleOnSubmit(days, hours, minutes, seconds, networkName, currency);
+        }}
+      >
+        <InputQuestion>Time-To-Live (TTL)</InputQuestion>
+        <Input.Group>
+          <Input style={{ width: "20%" }} addonAfter={"d"} placeholder="00" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDays(Number(e.target.value))} value={days} />
+          <Input style={{ width: "20%" }} addonAfter={"h"} placeholder="00" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHours(Number(e.target.value))} value={hours} />
+          <Input style={{ width: "20%" }} addonAfter={"m"} placeholder="00" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMinutes(Number(e.target.value))} value={minutes} />
+          <Input style={{ width: "20%" }} addonAfter={"s"} placeholder="00" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSeconds(Number(e.target.value))} value={seconds} />
+        </Input.Group>
 
-      <InputQuestion>Network Name</InputQuestion>
-      <Input
-        placeholder="---"
-        style={{ width: "400px" }}
-        onChange={(e) => setNetworkName(e.target.value)}
-        value={networkName}
-      />
+        <InputQuestion>Network Name</InputQuestion>
+        <Input placeholder="---" style={{ width: "400px" }} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNetworkName(e.target.value)} value={networkName} />
 
-      <InputQuestion>Currency Symbol</InputQuestion>
-      <Input
-        placeholder="---"
-        style={{ width: "400px" }}
-        onChange={(e) => setCurrency(e.target.value)}
-        value={currency}
-      />
-
-      <Card
+        <InputQuestion>Currency Symbol</InputQuestion>
+        <Input placeholder="---" style={{ width: "400px" }} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCurrency(e.target.value)} value={currency} />
+        {/* <Card
         style={{
           width: 400,
           margin: "8px 0px",
@@ -185,7 +196,36 @@ const CreateModal = (props: ICreateModalProps) => {
         >
           Confirm
         </SConfirmButton>
-      </SConfirmButtonContainer>
+      </SConfirmButtonContainer> */}
+        <Card
+          style={{
+            width: 400,
+            margin: "8px 0px",
+            background: "rgba(192, 192, 192, 0.2)",
+            border: "1px solid rgba(192, 192, 192, 0.2)",
+            borderRadius: "8px",
+          }}
+        >
+          <Row>
+            <Col span={12}>
+              <SPriceLabel>Total Price</SPriceLabel>
+              <SUnitPriceLabel>Unit Price: {pricePerSecond} SNAP</SUnitPriceLabel>
+            </Col>
+            <Col span={12}>
+              <SCalculatedPrice>{totalCost} SNAP</SCalculatedPrice>
+            </Col>
+          </Row>
+        </Card>
+        <SConfirmButtonContainer>
+          {loading ? (
+            <SConfirmButton disabled type="submit">
+              Loading...
+            </SConfirmButton>
+          ) : (
+            <SConfirmButton type="submit">Confirm</SConfirmButton>
+          )}
+        </SConfirmButtonContainer>
+      </form>
     </Modal>
   );
 };

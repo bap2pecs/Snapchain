@@ -4,6 +4,7 @@ import * as PropTypes from "prop-types";
 import Blockie from "./Blockie";
 import { ellipseAddress } from "../helpers/utilities";
 import { transitions } from "../styles";
+import useConnect from "src/hooks/useConnect";
 
 const SHeader = styled.div`
   margin-top: -1px;
@@ -70,34 +71,22 @@ const SDisconnect = styled.div<IHeaderStyle>`
   }
 `;
 
-interface IHeaderProps {
-  killSession: () => void;
-  connected: boolean;
-  address: string;
-  chainId: number;
-}
-
-const Header = (props: IHeaderProps) => {
-  const { connected, address, chainId, killSession } = props;
+const Header = () => {
+  const { address, connected, resetApp } = useConnect();
   return (
-    <SHeader {...props}>
+    <SHeader>
       <SSnapChainTitle>SnapChain</SSnapChainTitle>
       {address && (
         <SActiveAccount>
           <SBlockie address={address} />
           <SAddress connected={connected}>{ellipseAddress(address)}</SAddress>
-          <SDisconnect connected={connected} onClick={killSession}>
+          <SDisconnect connected={connected} onClick={resetApp}>
             {"Disconnect"}
           </SDisconnect>
         </SActiveAccount>
       )}
     </SHeader>
   );
-};
-
-Header.propTypes = {
-  killSession: PropTypes.func.isRequired,
-  address: PropTypes.string,
 };
 
 export default Header;
