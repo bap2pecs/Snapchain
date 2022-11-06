@@ -1,0 +1,29 @@
+services:
+  geth:
+    image: ethereum/client-go
+    container_name: geth
+    command:
+      [
+        '--syncmode=full',
+        '--datadir=<datadir>',
+        '--bootnodes=<enodeUrl>',
+        '--port=<port>',
+        '--http',
+        '--http.addr=0.0.0.0',
+        '--http.port=<httpport>',
+        '--networkid=<networkid>',
+        '--mine',
+        '--miner.threads=1',
+        '--miner.gasprice=1',
+        '--unlock=<unlock>',
+        '--password=<password>',
+        # TODO: fix this
+        '--allow-insecure-unlock',
+      ]
+    ports:
+      - '<httpport>:<httpport>'
+      - '<port>:<port>'
+    restart: always
+    volumes:
+      - '<datadir>:<datadir>'
+      - '<password>:<password>'

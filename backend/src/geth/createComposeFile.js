@@ -9,13 +9,23 @@ export async function createComposeFile(
   nodeKey,
   port,
   httpPort,
-  networkId
+  networkId,
+  nodeName,
+  enodeUrl = undefined
 ) {
-  // TODO: this should be another env var instead of hardcode to always be addrs 1
-  const unlockAddress = '0x' + process.env.SEALER_ADDRESS_1;
+  // TODO: fix this hack
+  let unlockAddress = '0x';
+  let template = '';
+  if (nodeName === 'node1') {
+    unlockAddress += process.env.SEALER_ADDRESS_1;
+    template = process.env.COMPOSE_TEMPLATE;
+  } else {
+    unlockAddress += process.env.SEALER_ADDRESS_2;
+    template = process.env.COMPOSE_TEMPLATE_2;
+  }
   try {
     const content = fs.readFileSync(
-      path.resolve(dirName(import.meta.url), process.env.COMPOSE_TEMPLATE)
+      path.resolve(dirName(import.meta.url), template)
     );
     const doc = yaml.load(content);
 
@@ -27,6 +37,7 @@ export async function createComposeFile(
       '<networkid>': networkId,
       '<unlock>': unlockAddress,
       '<password>': process.env.PASSWORD_FILE,
+      '<enodeUrl>': enodeUrl,
     };
 
     // TODO: here we have assumptions on the structure of the yml file. not

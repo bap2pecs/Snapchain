@@ -70,7 +70,8 @@ function createChainFactory(node, nodeName) {
       nodeKeyFile,
       port,
       httpport,
-      chainId
+      chainId,
+      nodeName
     );
 
     // 8. start the geth instance

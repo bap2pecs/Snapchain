@@ -106,6 +106,17 @@ class SnapP2pNode {
             // TODO: not sure if it makes sense to copy it instead of creating a new
             // account for each chain. need some discussion
             await copyKeystore(dataDir + '/keystore');
+
+            // 5. create the compose file
+            const composeFile = await createComposeFile(
+              dataDir,
+              nodeKeyFile,
+              msgObj.port,
+              msgObj.httpport,
+              msgObj.chainId,
+              this.nodeName,
+              msgObj.enodeUrl
+            );
           }
         })()
       );
