@@ -73,7 +73,8 @@ function createChainFactory(node) {
     );
 
     // 8. start the geth instance
-    await startGeth(composeFile);
+    // TODO: datadir should be parsed from the file directly. no need this param
+    await startGeth(datadir, composeFile);
     console.log('geth started');
 
     // 9. read the logs and extract enode url
