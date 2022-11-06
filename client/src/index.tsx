@@ -4,6 +4,11 @@ import { createGlobalStyle } from "styled-components";
 
 import App from "./App";
 import { globalStyle } from "./styles";
+
+import "antd/dist/antd.css";
+
+import "./global.css";
+
 const GlobalStyle = createGlobalStyle`
   ${globalStyle}
 `;

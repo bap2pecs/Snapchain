@@ -14,8 +14,11 @@ import ConnectButton from "./components/ConnectButton";
 
 import { Web3Provider } from "@ethersproject/providers";
 import { getChainData } from "./helpers/utilities";
-import DepositButton from "./components/DepositButton";
+import CreateButton from "./components/CreateButton";
 import background from "./assets/Snapchain_Background.png";
+
+import { Modal, Drawer, Spin } from "antd";
+import CreateModal from "./components/CreateModal";
 
 const SLayout = styled.div`
   position: relative;
@@ -73,6 +76,8 @@ const App = () => {
   const [library, setLibrary] = useState<any>(null);
   const [connected, setConnected] = useState<boolean>(false);
   const [chainId, setChainId] = useState<number>(1);
+
+  const [isCreateOpen, setCreateOpen] = useState<boolean>(false);
 
   useEffect(() => {
     createWeb3Modal();
@@ -181,6 +186,11 @@ const App = () => {
     setChainId(1);
   };
 
+  const showCreateModal = () => {
+    console.log("show create modal", isCreateOpen);
+    setCreateOpen(!isCreateOpen);
+  };
+
   return (
     <SLayout>
       <Column maxWidth={1400} spanHeight>
@@ -192,7 +202,7 @@ const App = () => {
         />
         <SSubHeader>
           <STitle>Chains</STitle>
-          <DepositButton />
+          <CreateButton onClick={showCreateModal} />
         </SSubHeader>
 
         <SContent>
@@ -205,7 +215,10 @@ const App = () => {
           ) : (
             <SLanding center>
               {!connected && <ConnectButton onClick={onConnect} />}
-              {/* <ChainList /> */}
+              <CreateModal
+                isCreateOpen={isCreateOpen}
+                showCreateModal={showCreateModal}
+              />
             </SLanding>
           )}
         </SContent>
