@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import styled from "styled-components";
 
@@ -53,7 +53,7 @@ const SCalculatedPrice = styled.div`
   font-family: "Martian Mono";
   font-style: normal;
   font-weight: 700;
-  font-size: 24px;
+  font-size: 21px;
   line-height: 30px;
   margin-right: auto;
   float: right;
@@ -98,6 +98,8 @@ const CreateModal = (props: ICreateModalProps) => {
   const [pricePerSecond, setPricePerSecond] = useState<string | number>("--");
   const [loading, setLoading] = useState(false);
   const [totalCost, setTotalCost] = useState<string | number>("--");
+
+  const totalCostFormatted = useMemo(() => (!Number.isInteger(totalCost as number) ? totalCost : new Intl.NumberFormat().format(totalCost as number)), [totalCost]);
 
   useEffect(() => {
     (async () => {
@@ -155,7 +157,7 @@ const CreateModal = (props: ICreateModalProps) => {
               <SUnitPriceLabel>Unit Price: {pricePerSecond} $SNAP</SUnitPriceLabel>
             </Col>
             <Col span={12}>
-              <SCalculatedPrice>{totalCost} $SNAP</SCalculatedPrice>
+              <SCalculatedPrice>{totalCostFormatted} $SNAP</SCalculatedPrice>
             </Col>
           </Row>
         </Card>

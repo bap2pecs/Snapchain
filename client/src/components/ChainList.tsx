@@ -34,6 +34,7 @@ const textureBG: React.CSSProperties = {
 const cardStyle = (status: Status): React.CSSProperties => ({
   ...textureBG,
   color: status === Status.Destroyed ? "#5f5f5f" : "#FEFEFE",
+  transition: "all 0.3s ease",
   width: 308,
 });
 const headStyle: React.CSSProperties = {
