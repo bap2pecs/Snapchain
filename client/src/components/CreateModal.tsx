@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import styled from "styled-components";
 
@@ -8,14 +8,7 @@ import { Modal, Input, Card, Row, Col, Button } from "antd";
 interface ICreateModalProps {
   isCreateOpen: boolean;
   showCreateModal: () => void;
-  handleOnSubmit: (
-    days: number,
-    hours: number,
-    minutes: number,
-    seconds: number,
-    networkName: string,
-    currency: string
-  ) => void;
+  handleOnSubmit: (days: number, hours: number, minutes: number, seconds: number, networkName: string, currency: string) => void;
 }
 
 const InputQuestion = styled.p`
@@ -79,6 +72,7 @@ const SConfirmButton = styled.button`
   align-items: center;
   padding: 12px 24px;
   gap: 10px;
+  cursor: pointer;
 
   width: 103px;
   height: 40px;
@@ -99,65 +93,56 @@ const CreateModal = (props: ICreateModalProps) => {
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [networkName, setNetworkName] = useState("");
-  const [currency, setCurrency] = useState("");
+  const [currency, setCurrency] = useState("ETH");
+  const [pricePerSecond, setPricePerSecond] = useState<string | number>("--");
+  const [loadingUnitPrice, setLoadingUnitPrice] = useState(false);
+  const createChain = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      // set loading
+      // send tx
+      console.log("send tx", days, hours, minutes, seconds);
+      const total = days * 86400 + hours * 3600 + minutes * 60 + seconds * (pricePerSecond as number);
+      // grpc call
+      console.log("send grpc", networkName, currency, total);
+      // close modal
+      showCreateModal();
+      console.log({
+        days,
+        hours,
+        minutes,
+        seconds,
+        networkName,
+        currency,
+        pricePerSecond,
+      });
+    },
+    [days, hours, minutes, seconds, networkName, currency, pricePerSecond]
+  );
+  useEffect(() => {
+    setLoadingUnitPrice(true);
+    // get price per second
+    setPricePerSecond(0.0001);
+    setLoadingUnitPrice(false);
+  }, []);
 
   return (
-    <Modal
-      title="Create Chain"
-      open={isCreateOpen}
-      onOk={showCreateModal}
-      onCancel={showCreateModal}
-      footer={null}
-    >
-      <InputQuestion>Time-To-Live (TTL)</InputQuestion>
-      <Input.Group>
-        <Input
-          style={{ width: "20%" }}
-          addonAfter={"d"}
-          placeholder="00"
-          onChange={(e) => setDays(Number(e.target.value))}
-          value={days}
-        />
-        <Input
-          style={{ width: "20%" }}
-          addonAfter={"h"}
-          placeholder="00"
-          onChange={(e) => setHours(Number(e.target.value))}
-          value={hours}
-        />
-        <Input
-          style={{ width: "20%" }}
-          addonAfter={"m"}
-          placeholder="00"
-          onChange={(e) => setMinutes(Number(e.target.value))}
-          value={minutes}
-        />
-        <Input
-          style={{ width: "20%" }}
-          addonAfter={"s"}
-          placeholder="00"
-          onChange={(e) => setSeconds(Number(e.target.value))}
-          value={seconds}
-        />
-      </Input.Group>
+    <Modal title="Create Chain" open={isCreateOpen} onOk={showCreateModal} onCancel={showCreateModal} footer={null}>
+      <form onSubmit={createChain}>
+        <InputQuestion>Time-To-Live (TTL)</InputQuestion>
+        <Input.Group>
+          <Input style={{ width: "20%" }} addonAfter={"d"} placeholder="00" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDays(Number(e.target.value))} value={days} />
+          <Input style={{ width: "20%" }} addonAfter={"h"} placeholder="00" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setHours(Number(e.target.value))} value={hours} />
+          <Input style={{ width: "20%" }} addonAfter={"m"} placeholder="00" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMinutes(Number(e.target.value))} value={minutes} />
+          <Input style={{ width: "20%" }} addonAfter={"s"} placeholder="00" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSeconds(Number(e.target.value))} value={seconds} />
+        </Input.Group>
 
-      <InputQuestion>Network Name</InputQuestion>
-      <Input
-        placeholder="---"
-        style={{ width: "400px" }}
-        onChange={(e) => setNetworkName(e.target.value)}
-        value={networkName}
-      />
+        <InputQuestion>Network Name</InputQuestion>
+        <Input placeholder="---" style={{ width: "400px" }} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNetworkName(e.target.value)} value={networkName} />
 
-      <InputQuestion>Currency Symbol</InputQuestion>
-      <Input
-        placeholder="---"
-        style={{ width: "400px" }}
-        onChange={(e) => setCurrency(e.target.value)}
-        value={currency}
-      />
-
-      <Card
+        <InputQuestion>Currency Symbol</InputQuestion>
+        <Input placeholder="---" style={{ width: "400px" }} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCurrency(e.target.value)} value={currency} />
+        {/* <Card
         style={{
           width: 400,
           margin: "8px 0px",
@@ -185,7 +170,36 @@ const CreateModal = (props: ICreateModalProps) => {
         >
           Confirm
         </SConfirmButton>
-      </SConfirmButtonContainer>
+      </SConfirmButtonContainer> */}
+        <Card
+          style={{
+            width: 400,
+            margin: "8px 0px",
+            background: "rgba(192, 192, 192, 0.2)",
+            border: "1px solid rgba(192, 192, 192, 0.2)",
+            borderRadius: "8px",
+          }}
+        >
+          <Row>
+            <Col span={12}>
+              <SPriceLabel>Total Price</SPriceLabel>
+              <SUnitPriceLabel>Unit Price: {pricePerSecond} SNAP</SUnitPriceLabel>
+            </Col>
+            <Col span={12}>
+              <SCalculatedPrice>-- SNAP</SCalculatedPrice>
+            </Col>
+          </Row>
+        </Card>
+        <SConfirmButtonContainer>
+          {loadingUnitPrice ? (
+            <SConfirmButton disabled type="submit">
+              Loading...
+            </SConfirmButton>
+          ) : (
+            <SConfirmButton type="submit">Confirm</SConfirmButton>
+          )}
+        </SConfirmButtonContainer>
+      </form>
     </Modal>
   );
 };

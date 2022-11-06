@@ -1,39 +1,19 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import { getChainData } from "../helpers/utilities";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import { useRecoilState } from "recoil";
+import { addressState, chainIdState, connectedState, fetchingState, libraryState, providerState } from "src/state/provider";
 
 let web3Modal: Web3Modal;
 export default function useConnect() {
-  // const [connected, setConnected] = useState(false);
-  // const [connecting, setConnecting] = useState(false);
-
-  // const connect = useCallback(async () => {
-  //   setConnecting(true);
-  //   try {
-  //     await window.ethereum.enable();
-  //     setConnected(true);
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     setConnecting(false);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   if (window.ethereum) {
-  //     setConnected(true);
-  //   }
-  // }, []);
-
-  // return { connected, connecting, connect };
-  const [provider, setProvider] = useState<any>();
-  const [fetching, setFetching] = useState<boolean>(false);
-  const [address, setAddress] = useState<string>("");
-  const [library, setLibrary] = useState<any>(null);
-  const [connected, setConnected] = useState<boolean>(false);
-  const [chainId, setChainId] = useState<number>(1);
+  const [provider, setProvider] = useRecoilState(providerState);
+  const [connected, setConnected] = useRecoilState(connectedState);
+  const [fetching, setFetching] = useRecoilState(fetchingState);
+  const [address, setAddress] = useRecoilState(addressState);
+  const [library, setLibrary] = useRecoilState(libraryState);
+  const [chainId, setChainId] = useRecoilState(chainIdState);
 
   useEffect(() => {
     createWeb3Modal();
@@ -53,7 +33,17 @@ export default function useConnect() {
 
   const onConnect = async () => {
     const provider = await web3Modal.connect();
-    setProvider(provider);
+    setProvider((old: Record<string, any>) => {
+      if (!old) {
+        return provider;
+      }
+      return Object.keys(provider).reduce((acc: Record<string, any>, key: string) => {
+        if (typeof provider[key] !== "function") {
+          acc[key] = provider[key];
+        }
+        return acc;
+      }, old);
+    });
 
     const library = new Web3Provider(provider);
 

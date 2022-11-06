@@ -1,6 +1,7 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { createGlobalStyle } from "styled-components";
+import { RecoilRoot } from "recoil";
 
 import App from "./App";
 import { globalStyle } from "./styles";
@@ -26,10 +27,12 @@ declare global {
   }
 }
 
-ReactDOM.render(
+const root = createRoot(document.getElementById("root")!); // createRoot(container!) if you use TypeScript
+root.render(
   <>
     <GlobalStyle />
-    <App />
-  </>,
-  document.getElementById("root")
+    <RecoilRoot>
+      <App />
+    </RecoilRoot>
+  </>
 );
