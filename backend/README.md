@@ -1,6 +1,10 @@
 # Snapchain
 
 ## Pre-requisites
+0. create the password.txt file
+
+- `echo 123456 > /Users/<your username>/.ethereum/snapchain/password.txt`
+
 1. create an account on your host
 
 - `docker run --platform linux/amd64 -d --rm -v /Users/<your username>:/Users/<your username> ethereum/client-go:alltools-latest geth account new --datadir /Users/<your username>/.ethereum/snapchain --password /Users/<your username>/.ethereum/snapchain/password.txt`
