@@ -86,6 +86,14 @@ function createChainFactory(node) {
     // - read ttl from the contract
 
     // Broadcast message to network
+    const msg = call.request;
+    msg.enodeUrl = enodeUrl;
+    msg.chainId = chainId;
+    msg.dataDir = datadir;
+    msg.genesisFile = genesisFile;
+    msg.port = port;
+    msg.httpport = httpport;
+
     const peers = node.node.getPeers();
     // TODO: this is not really broadcast. also need to wait for connection
     const stream = await node.node.dialProtocol(peers[0], [
