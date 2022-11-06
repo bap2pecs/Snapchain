@@ -33,11 +33,8 @@ function createChainFactory(node) {
     // 1. input validation
     // - check nonce and alive in the contract
     // - check the local DB does not have the (depositor, nonce) combination
-    // 2. select a random chain id and port number
-    // - avoid choosing a port number in use
+    // 2. select a random chain id
     const chainId = await genChainId();
-    // 0 to 1024 are reserved for privileged services
-    const port = randomIntFromInterval(1025, 65536);
     // 3. create a genesis file
     const datadir = `${process.env.HOME}/.ethereum/snapchain/${chainId}`;
     const genesisFile = `${datadir}/genesis.json`;
@@ -62,10 +59,15 @@ function createChainFactory(node) {
     await copyKeystore(datadir + '/keystore');
 
     // 7. create the compose file
+    // TODO: avoid choosing a port number in use
+    // 0 to 1024 are reserved for privileged services
+    const port = randomIntFromInterval(1025, 65536);
+    const httpport = randomIntFromInterval(1025, 65536);
     const composeFile = await createComposeFile(
       datadir,
       nodeKeyFile,
       port,
+      httpport,
       chainId
     );
 
