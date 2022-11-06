@@ -11,6 +11,7 @@ import { createNodeKeyFile } from '../geth/createNodeKeyFile.js';
 import { createComposeFile } from '../geth/createComposeFile.js';
 import { copyKeystore } from '../geth/copyKeystore.js';
 import { startGeth } from '../geth/startGeth.js';
+import { getEnodeUrl } from '../geth/getEnodeUrl.js';
 
 const PROTO_PATH = dirName(import.meta.url) + '/snap.proto';
 
@@ -77,8 +78,9 @@ function createChainFactory(node) {
     await startGeth(datadir, composeFile);
     console.log('geth started');
 
-    // 9. read the logs and extract enode url
-    // TODO: wait for some seconds so encode url will be there
+    // 9. read the docker logs and extract enode url
+    const enodeUrl = await getEnodeUrl(datadir);
+    console.log('enodeUrl: ' + enodeUrl);
 
     // x. schedule a task to enter grace period
     // - read ttl from the contract
