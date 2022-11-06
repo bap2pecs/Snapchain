@@ -20,7 +20,6 @@
     "bitski": "^0.10.9",
     "blockies-ts": "^1.0.0",
     "dotenv": "^10.0.0",
-    "eth-permit-ethers": "^0.2.1",
     "ethereumjs-util": "^6.1.0",
     "ethers": "^5.0.24",
     "fortmatic": "^0.8.2",

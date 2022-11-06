@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { Modal, Input, Card, Row, Col, Button } from "antd";
+import { deposit, secondPrice } from "src/tx/Snapchain";
 
 interface ICreateModalProps {
   isCreateOpen: boolean;
@@ -88,25 +89,32 @@ const SConfirmButton = styled.button`
 const CreateModal = (props: ICreateModalProps) => {
   const { isCreateOpen, showCreateModal, handleOnSubmit } = props;
 
-  const [days, setDays] = useState(0);
-  const [hours, setHours] = useState(0);
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(0);
-  const [networkName, setNetworkName] = useState("");
-  const [currency, setCurrency] = useState("ETH");
+  const [days, setDays] = useState(10);
+  const [hours, setHours] = useState(10);
+  const [minutes, setMinutes] = useState(20);
+  const [seconds, setSeconds] = useState(30);
+  const [networkName, setNetworkName] = useState("Test");
+  const [currency, setCurrency] = useState("GOR");
   const [pricePerSecond, setPricePerSecond] = useState<string | number>("--");
-  const [loadingUnitPrice, setLoadingUnitPrice] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [totalCost, setTotalCost] = useState<string | number>("--");
+  const [TTLSeconds, setTTLSeconds] = useState(0);
   const createChain = useCallback(
-    (e: React.FormEvent<HTMLFormElement>) => {
+    async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       // set loading
+      setLoading(true);
       // send tx
+      await deposit(TTLSeconds);
       console.log("send tx", days, hours, minutes, seconds);
-      const total = days * 86400 + hours * 3600 + minutes * 60 + seconds * (pricePerSecond as number);
+
       // grpc call
-      console.log("send grpc", networkName, currency, total);
+      console.log("send grpc", networkName, currency);
       // close modal
-      showCreateModal();
+      setTimeout(() => {
+        setLoading(false);
+        showCreateModal();
+      }, 2000);
       console.log({
         days,
         hours,
@@ -117,18 +125,36 @@ const CreateModal = (props: ICreateModalProps) => {
         pricePerSecond,
       });
     },
-    [days, hours, minutes, seconds, networkName, currency, pricePerSecond]
+    [days, hours, minutes, seconds, networkName, currency, pricePerSecond, TTLSeconds]
   );
   useEffect(() => {
-    setLoadingUnitPrice(true);
-    // get price per second
-    setPricePerSecond(0.0001);
-    setLoadingUnitPrice(false);
+    (async () => {
+      setLoading(true);
+      const price = await secondPrice();
+      console.log("return price", price);
+      // get price per second
+      setPricePerSecond(price);
+      setLoading(false);
+    })();
   }, []);
+  useEffect(() => {
+    const ttlSeconds = days * 86400 + hours * 3600 + minutes * 60 + seconds;
+    setTTLSeconds(ttlSeconds);
+    if (loading) {
+      return;
+    }
+    const total = ttlSeconds * (pricePerSecond as number);
+    setTotalCost(total);
+  }, [days, hours, minutes, seconds, pricePerSecond, loading]);
 
   return (
     <Modal title="Create Chain" open={isCreateOpen} onOk={showCreateModal} onCancel={showCreateModal} footer={null}>
-      <form onSubmit={createChain}>
+      <form
+        onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+          e.preventDefault();
+          handleOnSubmit(days, hours, minutes, seconds, networkName, currency);
+        }}
+      >
         <InputQuestion>Time-To-Live (TTL)</InputQuestion>
         <Input.Group>
           <Input style={{ width: "20%" }} addonAfter={"d"} placeholder="00" onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDays(Number(e.target.value))} value={days} />
@@ -186,12 +212,12 @@ const CreateModal = (props: ICreateModalProps) => {
               <SUnitPriceLabel>Unit Price: {pricePerSecond} SNAP</SUnitPriceLabel>
             </Col>
             <Col span={12}>
-              <SCalculatedPrice>-- SNAP</SCalculatedPrice>
+              <SCalculatedPrice>{totalCost} SNAP</SCalculatedPrice>
             </Col>
           </Row>
         </Card>
         <SConfirmButtonContainer>
-          {loadingUnitPrice ? (
+          {loading ? (
             <SConfirmButton disabled type="submit">
               Loading...
             </SConfirmButton>

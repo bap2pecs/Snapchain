@@ -4,8 +4,6 @@ import { useState } from "react";
 import { Contract, ethers } from "ethers";
 import { SNAPCHAINABI as snapchainabi } from "./abi/ERC20ABI";
 
-import { signERC2612Permit } from "eth-permit-ethers";
-
 // @ts-ignore
 import Column from "./components/Column";
 import Header from "./components/Header";
