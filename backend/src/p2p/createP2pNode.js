@@ -57,7 +57,23 @@ class SnapP2pNode {
       pipe(stream, (source) =>
         (async function () {
           for await (const msg of source) {
-            console.log(uint8ArrayToString(msg.subarray()));
+            const msgStr = uint8ArrayToString(msg.subarray());
+            console.log(msgStr);
+            const msgObj = JSON.parse(msgStr);
+            /* example: msgObj
+            {
+              depositor: '1fd0a83447c0586690f56643ad0077e5ad8eb024',
+              nonce: 0,
+              name: 'Snap Testnet',
+              currency: 'SNAP',
+              enodeUrl: 'enode://...@127.0.0.1:20208',
+              chainId: 36029,
+              dataDir: '/Users/.../.ethereum/snapchain/36029',
+              genesisFile: '/Users/.../.ethereum/snapchain/36029/genesis.json',
+              port: 20208,
+              httpport: 1363
+            }
+            */
           }
         })()
       );
