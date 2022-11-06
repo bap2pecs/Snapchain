@@ -1,14 +1,12 @@
 import styled from "styled-components";
 import Wrapper from "./components/Wrapper";
 import Column from "./components/Column";
-import background from "./assets/Snapchain_Background.png";
 
 export const SLayout = styled.div`
   position: relative;
   width: 100%;
   min-height: 100vh;
   /* background-color: #1a1a1a; */
-  background-image: url(${background});
 `;
 
 export const SContent = styled(Wrapper)`
@@ -27,8 +25,9 @@ export const SContainer = styled.div`
   word-break: break-word;
 `;
 
-export const SLanding = styled(Column)`
+export const SLanding = styled.div`
   height: 600px;
+  max-width: 100%;
 `;
 
 export const STitle = styled.h1`

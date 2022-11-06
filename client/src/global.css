@@ -5,6 +5,28 @@
   backdrop-filter: blur(20px);
   border-radius: 16px;
 }
+/*default version*/
+@font-face {
+  font-family: "Martian Mono";
+  src: local("Martian Mono"), url("fonts/martian_mono/ttf/MartianMono-StdRg.ttf") format("truetype");
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+body {
+  font-family: "Inter", sans-serif;
+  background-image: url(assets/Snapchain_Background.png);
+  margin-top: 57px;
+  overflow: hidden;
+  padding-bottom: 20px;
+}
+#root {
+  overflow: auto;
+}
+/* ant overrides */
+.ant-modal-content {
+  background: aliceblue;
+}
 .ant-modal-header {
   background: transparent;
 }
@@ -67,4 +89,8 @@
 
 .ant-card-body {
   padding: 8px;
+}
+
+.ant-card {
+  background: transparent;
 }
