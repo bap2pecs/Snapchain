@@ -43,6 +43,12 @@ export async function createComposeFile(
       doc.services.geth.volumes,
       pairs
     );
+
+    // support Apple chips
+    if (process.env.IS_APPLE_CHIP === 'true') {
+      doc.services.geth.platform = 'linux/amd64';
+    }
+
     const composeFile = dataDir + '/docker-compose.yml';
     fs.writeFile(composeFile, yaml.dump(doc), (err) => {
       if (err) {
