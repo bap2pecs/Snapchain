@@ -1,5 +1,7 @@
 # Snapchain
 
+🥇 First place winner at EthSF 2022! 🥇
+
 ### Project Description
 
 At Snapchain, we’re building a permissionless peer-to-peer network to create and manage ephemeral blockchains seamlessly. Our solution enables developers, creators, and enterprises to spin up blockchains with an indicated time-to-live (TTL) that deletes itself at expiration to best suit the particular application or use case, saving cost, processing power, and storage capacity.
