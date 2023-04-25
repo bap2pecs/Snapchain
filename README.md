@@ -1,6 +1,6 @@
 # Snapchain
 
-🥇 First place winner at EthSF 2022! 🥇
+🥇 First place winner at EthSF 2022! ([submission](https://ethglobal.com/showcase/snapchain-kp408)) 🥇
 
 ### Project Description
 
